@@ -7,16 +7,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity
@@ -35,7 +33,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);;
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -45,6 +43,23 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        //set up recycler view
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+
+        ItemData[] itemsData = {new ItemData("Phoebe Buffay", R.drawable.help),
+                new ItemData("Joey Tribbiani", R.drawable.content_discard),
+                new ItemData("Rachel Greene", R.drawable.collections_cloud),
+                new ItemData("Chandler Bing", R.drawable.rating_favorite),
+                new ItemData("Monica Geller", R.drawable.rating_good),
+                new ItemData("Ross Geller", R.drawable.rating_important)};
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        MyAdapter myAdapter = new MyAdapter(itemsData);
+        recyclerView.setAdapter(myAdapter);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
     }
 
     @Override
@@ -118,7 +133,7 @@ public class MainActivity extends ActionBarActivity
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-        private ArrayAdapter<String> adapter;
+//        private ArrayAdapter<String> adapter;
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -141,33 +156,33 @@ public class MainActivity extends ActionBarActivity
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
             //populated the list with fake data
-            List<String> data = new ArrayList<String>();
-            data.add("Srishti Sengupta - Walking");
-            data.add("Joey Tribbiani - Eating");
-            data.add("Phoebe Buffay - Idle");
-            data.add("Ross Geller - Sleeping");
-            data.add("Rachel Greene - Shopping");
-            data.add("Monica Geller - Cooking");
-            data.add("Chandler Bing - Sarcasm");
-            data.add("Oliver Queen - Vigilanting");
-            data.add("Barry Allen - Running");
+//            List<String> data = new ArrayList<String>();
+//            data.add("Srishti Sengupta - Walking");
+//            data.add("Joey Tribbiani - Eating");
+//            data.add("Phoebe Buffay - Idle");
+//            data.add("Ross Geller - Sleeping");
+//            data.add("Rachel Greene - Shopping");
+//            data.add("Monica Geller - Cooking");
+//            data.add("Chandler Bing - Sarcasm");
+//            data.add("Oliver Queen - Vigilanting");
+//            data.add("Barry Allen - Running");
 
             //ArrayAdapter takes data from a source (fake data) and uses it to populate listView attached to it
-            adapter = new ArrayAdapter<String>(
-                    getActivity(),  //fragment's parent activity (context)
-                    R.layout.list_item_desc,    //ID of list item layout
-                    R.id.list_item_desc_textview,   //ID of text view to populate
-                    data    //dummy forecast data
-
-
-            );
+//            adapter = new ArrayAdapter<String>(
+//                    getActivity(),  //fragment's parent activity (context)
+//                    R.layout.list_item_desc,    //ID of list item layout
+//                    R.id.list_item_desc_textview,   //ID of text view to populate
+//                    data    //dummy forecast data
+//
+//
+//            );
 
             //get reference to list view and attach adapter to it
             //adapter supplies list item layouts to the list view based on dummy forecast data
-            ListView listView = (ListView) rootView.findViewById(
-                    R.id.listview_desc
-            );
-            listView.setAdapter(adapter);
+//            ListView listView = (ListView) rootView.findViewById(
+//                    R.id.listview_desc
+//            );
+//            listView.setAdapter(adapter);
 
 
             return rootView;
