@@ -1,0 +1,24 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# Changes to be committed:
+#	modified:   app/app.iml
+#	modified:   app/build.gradle
+#	new file:   app/libs/classes.jar
+#	modified:   app/src/main/AndroidManifest.xml
+#	modified:   app/src/main/java/stalk/example/com/stalk/MainActivity.java
+#	new file:   app/src/main/res/drawable-hdpi/border.xml
+#	new file:   app/src/main/res/drawable-hdpi/collections_cloud.png
+#	new file:   app/src/main/res/drawable-hdpi/content_discard.png
+#	new file:   app/src/main/res/drawable-hdpi/help.png
+#	new file:   app/src/main/res/drawable-hdpi/ic_launcher.png
+#	new file:   app/src/main/res/drawable-hdpi/rating_favorite.png
+#	new file:   app/src/main/res/drawable-hdpi/rating_good.png
+#	new file:   app/src/main/res/drawable-hdpi/rating_important.png
+#	modified:   app/src/main/res/layout/activity_main.xml
+#	modified:   app/src/main/res/layout/fragment_main.xml
+#
+
