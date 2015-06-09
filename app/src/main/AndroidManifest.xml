@@ -20,17 +20,24 @@
         </activity>
 
         <!-- child of the main activity -->
-        <!--<activity-->
-            <!--android:name=".DisplayMessagesActivity"-->
-            <!--android:label="@string/title_activity_display_message"-->
-            <!--android:parentActivityName=".MainActivity" >-->
-            <!--&lt;!&ndash; parent activity metadata to support 4.0 and lower &ndash;&gt;-->
-            <!--<meta-data-->
-                <!--android:name="android.support.PARENT_ACTIVITY"-->
-                <!--android:value=".MainActivity" />-->
-        <!--</activity>-->
+        <!-- <activity -->
+        <!-- android:name=".DisplayMessagesActivity" -->
+        <!-- android:label="@string/title_activity_display_message" -->
+        <!-- android:parentActivityName=".MainActivity" > -->
+        <!-- &lt;!&ndash; parent activity metadata to support 4.0 and lower &ndash;&gt; -->
+        <!-- <meta-data -->
+        <!-- android:name="android.support.PARENT_ACTIVITY" -->
+        <!-- android:value=".MainActivity" /> -->
+        <!-- </activity> -->
 
-
+        <activity
+            android:name=".RecognitionAPIActivity"
+            android:label="@string/title_activity_recognition_api"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="stalk.example.com.stalk.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

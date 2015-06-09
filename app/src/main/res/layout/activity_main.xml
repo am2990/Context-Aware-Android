@@ -25,6 +25,16 @@
             tools:context=".MainActivity"
             />
 
+        <Button
+            android:id="@+id/button_activity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="420dp"
+            android:layout_marginLeft="135dp"
+            android:padding="15dp"
+            android:text="@string/button_activity"
+            />
+
     </RelativeLayout>
 
     <!-- Side navigation drawer UI -->
