@@ -26,7 +26,7 @@ public class DetectionRequester
     private PendingIntent mActivityRecognitionPendingIntent;
 
     // Stores the current instantiation of the activity recognition client
-    private ActivityRecognitionClient mActivityRecognitionClient;
+    private GoogleApiClient mActivityRecognitionClient;
 
     public DetectionRequester(Context context) {
         // Save the context
@@ -94,7 +94,7 @@ public class DetectionRequester
      *
      * @return An ActivityRecognitionClient object
      */
-    private ActivityRecognitionClient getActivityRecognitionClient() {
+    private GoogleApiClient getActivityRecognitionClient() {
         if (mActivityRecognitionClient == null) {
 
             mActivityRecognitionClient =

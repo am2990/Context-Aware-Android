@@ -17,13 +17,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
  * Created by Srishti Sengupta on 6/10/2015.
  */
 public class DetectionRemover
-        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+        implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
 
     // Storage for a context from the calling client
     private Context mContext;
 
     // Stores the current instantiation of the activity recognition client
-    private ActivityRecognitionClient mActivityRecognitionClient;
+    private GoogleApiClient mActivityRecognitionClient;
 
     // The PendingIntent sent in removeUpdates()
     private PendingIntent mCurrentIntent;
@@ -74,7 +74,7 @@ public class DetectionRemover
      *
      * @return An ActivityRecognitionClient object
      */
-    public ActivityRecognitionClient getActivityRecognitionClient() {
+    public GoogleApiClient getActivityRecognitionClient() {
         /*
          * If a client doesn't already exist, create a new one, otherwise
          * return the existing one. This allows multiple attempts to send
@@ -85,6 +85,7 @@ public class DetectionRemover
         if (mActivityRecognitionClient == null) {
             // Create a new one
             setActivityRecognitionClient(new ActivityRecognitionClient(mContext, this, this));
+
         }
         return mActivityRecognitionClient;
     }
@@ -105,7 +106,7 @@ public class DetectionRemover
      * Set the global activity recognition client
      * @param client An ActivityRecognitionClient object
      */
-    public void setActivityRecognitionClient(ActivityRecognitionClient client) {
+    public void setActivityRecognitionClient(GoogleApiClient client) {
         mActivityRecognitionClient = client;
 
     }
@@ -134,7 +135,8 @@ public class DetectionRemover
     private void continueRemoveUpdates() {
 
         // Remove the updates
-        mActivityRecognitionClient.removeActivityUpdates(mCurrentIntent);
+//        mActivityRecognitionClient.removeActivityUpdates(mCurrentIntent);
+        removeUpdates(mCurrentIntent);
 
         /*
          * Cancel the PendingIntent. This stops Intents from arriving at the IntentService, even if
