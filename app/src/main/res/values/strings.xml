@@ -11,6 +11,7 @@
     <string name="action_refresh">Refresh</string>
     <string name="action_search">Search</string>
     <string name="button_activity">Activity</string>
+    <string name="hello_world">Hello world!</string>
 
 
     //activity recognition API strings
@@ -49,5 +50,6 @@
     <string name="unknown_activity_request_code">
         Received an unknown activity request code %1$d in onActivityResult.
     </string>
+    <string name="title_activity_user_profile">UserProfile</string>
 
 </resources>

@@ -28,6 +28,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private String mActivityTitle;
     Button activityRecognition;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
