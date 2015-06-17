@@ -2,6 +2,7 @@ package stalk.example.com.stalk;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Created by Srishti Sengupta on 6/4/2015.
@@ -72,9 +75,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
             Toast.makeText(v.getContext(), "Set up your profile!", Toast.LENGTH_SHORT).show();
 
             String value = txtViewTitle.getText().toString();
-            //String value = "NAA";
+            imgViewIcon.buildDrawingCache();
+            Bitmap b = imgViewIcon.getDrawingCache();
+            ByteArrayOutputStream bs = new ByteArrayOutputStream();
+            b.compress(Bitmap.CompressFormat.PNG, 50, bs);
+
             Intent userprofile = new Intent(context, UserProfileActivity.class);
             userprofile.putExtra("key", value);
+            userprofile.putExtra("byteArray", bs.toByteArray());
+
             context.startActivity(userprofile);
         }
 

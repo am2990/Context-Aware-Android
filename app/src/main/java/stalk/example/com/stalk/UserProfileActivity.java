@@ -1,9 +1,13 @@
 package stalk.example.com.stalk;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -14,14 +18,26 @@ public class UserProfileActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         Bundle bun = new Bundle();
         bun = getIntent().getExtras();
-        String value = bun.getString("key");
+        String value = bun.getString("key");        //username
+        Bitmap b = BitmapFactory.decodeByteArray(
+                getIntent().getByteArrayExtra("byteArray"), 0, getIntent().getByteArrayExtra("byteArray").length);      //usericon
 
         //create textview
-        TextView textView = new TextView(this);
-        textView.setTextSize(40);
-        textView.setText(value);
+        TextView username = new TextView(this);
+        username.setTextSize(20);
+        username.setPadding(240, 20, 0, 0);
+        username.setText(value);
 
-        setContentView(textView);
+        //create imageview
+        ImageView usericon = new ImageView(this);
+        usericon.setImageBitmap(b);
+
+        LinearLayout profile = new LinearLayout(this);
+        profile.setOrientation(LinearLayout.VERTICAL);
+        profile.addView(username);
+        profile.addView(usericon);
+
+        setContentView(profile);
     }
 
     @Override
