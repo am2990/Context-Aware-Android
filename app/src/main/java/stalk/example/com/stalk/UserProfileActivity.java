@@ -1,9 +1,10 @@
 package stalk.example.com.stalk;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 
 public class UserProfileActivity extends ActionBarActivity {
@@ -11,8 +12,16 @@ public class UserProfileActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_profile);
+        Bundle bun = new Bundle();
+        bun = getIntent().getExtras();
+        String value = bun.getString("key");
 
+        //create textview
+        TextView textView = new TextView(this);
+        textView.setTextSize(40);
+        textView.setText(value);
+
+        setContentView(textView);
     }
 
     @Override

@@ -70,8 +70,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
         @Override
         public void onClick(View v) {
             Toast.makeText(v.getContext(), "Set up your profile!", Toast.LENGTH_SHORT).show();
+
+            String value = txtViewTitle.getText().toString();
+            //String value = "NAA";
             Intent userprofile = new Intent(context, UserProfileActivity.class);
-//            userprofile.putExtra("EXTRA_ID", "SOME DATA");
+            userprofile.putExtra("key", value);
             context.startActivity(userprofile);
         }
 
