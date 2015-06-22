@@ -1,44 +1,127 @@
 package stalk.example.com.stalk;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Srishti Sengupta on 6/8/2015.
  */
 public class FeedReaderDbHelper extends SQLiteOpenHelper {
-    // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "FeedReader.db";
-    public static final String TABLE_NAME = "FeedEntry";
-    public static String COLUMN_ID = "_id";
-    public static final String COLUMN_USERNAME = "name";
-    public static final String COLUMN_ACTIVITY = "activity";
-    private static final String TEXT_TYPE = " TEXT not null";
-    private static final String COMMA_SEP = ",";
 
-    private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE " + TABLE_NAME + " (" +
-                    COLUMN_ID + " INTEGER PRIMARY KEY autoincrement," +
-                    COLUMN_USERNAME + TEXT_TYPE + COMMA_SEP +
-                    COLUMN_ACTIVITY + TEXT_TYPE + COMMA_SEP +
-                    " )";
+    //Logcat tag
+    private static final String LOG = "Database Helper";
 
-    private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS " + TABLE_NAME;
+    //Database version
+    private static final int DATABASE_VERSION = 1;
 
+    //Database name
+    private static final String DATABASE_NAME = "userProfile";
+
+    //table(s)
+    private static final String TABLE_FEED_ENTRY = "feedEntry";
+
+    //column names
+    private static final String KEY_ID = "id";
+    private static final String KEY_USERNAME = "username";
+    private static final String KEY_ACTIVITY = "activity";
+
+    //creating tables
+    private static final String CREATE_TABLE_FEED_ENTRY = "CREATE TABLE "
+            + TABLE_FEED_ENTRY + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME
+            + " TEXT," + KEY_ACTIVITY + " TEXT" + ")";
 
     public FeedReaderDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
+    @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_ENTRIES);
+        //create required table
+        db.execSQL(CREATE_TABLE_FEED_ENTRY);
     }
+
+    @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // This database is only a cache for online data, so its upgrade policy is
-        // to simply to discard the data and start over
-        db.execSQL(SQL_DELETE_ENTRIES);
+        //on upgrade drop older tables
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FEED_ENTRY);
+
+        //create new tables
         onCreate(db);
+    }
+
+    //Create FeedEntry
+    public long createFeedEntry(FeedEntry feedEntry) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_ID, feedEntry.getId());
+        values.put(KEY_USERNAME, feedEntry.getUsername());
+        values.put(KEY_ACTIVITY, feedEntry.getActivity());
+
+        //insert row into database
+        long feedEntry_id = db.insert(TABLE_FEED_ENTRY, null, values);
+        return feedEntry_id;
+    }
+
+    //fetch single row containing user data
+    public FeedEntry getFeedEntry(long feedEntry_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + TABLE_FEED_ENTRY + " WHERE "
+                + KEY_ID + " = " + feedEntry_id;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null)
+            c.moveToFirst();
+
+        FeedEntry entry = new FeedEntry();
+        entry.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+        entry.setUsername((c.getString(c.getColumnIndex(KEY_USERNAME))));
+        entry.setActivity(c.getString(c.getColumnIndex(KEY_ACTIVITY)));
+
+        return entry;
+    }
+
+    //fetch all rows
+    public List<FeedEntry> getAllEntries() {
+        List<FeedEntry> allEntries = new ArrayList<FeedEntry>();
+        String selectQuery = "SELECT * FROM " + TABLE_FEED_ENTRY;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all row entries and adding to list
+        if (c.moveToFirst()) {
+            do {
+                FeedEntry td = new FeedEntry();
+                td.setId(c.getInt((c.getColumnIndex(KEY_ID))));
+                td.setUsername((c.getString(c.getColumnIndex(KEY_USERNAME))));
+                td.setActivity(c.getString(c.getColumnIndex(KEY_ACTIVITY)));
+
+                // adding to allEntries list
+                allEntries.add(td);
+            } while (c.moveToNext());
+        }
+
+        return allEntries;
+    }
+
+    //closing database connection
+    public void closeDB() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        if (db != null && db.isOpen())
+            db.close();
     }
 }

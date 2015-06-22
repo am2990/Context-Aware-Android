@@ -9,16 +9,31 @@ public class FeedEntry {
     private String username;
     private String activity;
 
-    public long getId() {
-        return id;
+    //constructor
+    public FeedEntry(long id, String username, String activity) {
+        this.id = id;
+        this.username = username;
+        this.activity = activity;
     }
 
+    public FeedEntry() {
+        this.id = id;
+        this.username = username;
+        this.activity = activity;
+    }
+
+    //getters
+    public long getId() {
+        return this.id;
+    }
+
+    //setters
     public void setId(long id) {
         this.id = id;
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public void setUsername(String username) {
@@ -26,19 +41,11 @@ public class FeedEntry {
     }
 
     public String getActivity() {
-        return activity;
+        return this.activity;
     }
-
 
     public void setActivity(String activity) {
         this.activity = activity;
     }
-
-    // Will be used by the ArrayAdapter in the ListView
-    @Override
-    public String toString() {
-        return username;
-    }
-
 
 }

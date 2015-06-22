@@ -17,10 +17,10 @@ import java.io.ByteArrayOutputStream;
  * Created by Srishti Sengupta on 6/4/2015.
  */
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private ItemData[] itemsData;
 
-    public MyAdapter(ItemData[] itemsData){
+    public MyAdapter(ItemData[] itemsData) {
         this.itemsData = itemsData;
     }
 
@@ -55,12 +55,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
 
     }
 
+    // Return the size of your itemsData (invoked by the layout manager)
+    @Override
+    public int getItemCount() {
+        return itemsData.length;
+    }
+
     // inner class to hold a reference to each item of RecyclerView
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        private final Context context;
         public TextView txtViewTitle;
         public ImageView imgViewIcon;
-        private final Context context;
 
         public ViewHolder(View v, View itemLayoutView) {
             super(itemLayoutView);
@@ -87,12 +93,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
             context.startActivity(userprofile);
         }
 
-    }
-
-    // Return the size of your itemsData (invoked by the layout manager)
-    @Override
-    public int getItemCount() {
-        return itemsData.length;
     }
 
 }

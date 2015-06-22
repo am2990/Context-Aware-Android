@@ -7,10 +7,12 @@ public class ItemData {
 
     private String title;
     private int imageUrl;
+    private String activity;
 
-    public ItemData(String title, int imageUrl){
+    public ItemData(String title, int imageUrl, String activity) {
         this.title = title;
         this.imageUrl = imageUrl;
+        this.activity = activity;
     }
 
     public String getTitle() {
@@ -27,6 +29,14 @@ public class ItemData {
 
     public void setImageUrl(int imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getActivity() {
+        return activity;
+    }
+
+    public void setActivity(String activity) {
+        this.activity = activity;
     }
 
 }

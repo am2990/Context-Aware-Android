@@ -18,29 +18,54 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.List;
+
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
+    Button activityRecognition;
+    FeedReaderDbHelper db;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
-    Button activityRecognition;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        db = new FeedReaderDbHelper(getApplicationContext());
 
+        //create entries
+        FeedEntry entry1 = new FeedEntry(1, "Phoebe Buffay", "Sleeping");
+        FeedEntry entry2 = new FeedEntry(2, "Joey Tribbiani", "Eating");
+        FeedEntry entry3 = new FeedEntry(3, "Rachel Greene", "Shopping");
+        FeedEntry entry4 = new FeedEntry(4, "Chandler Bing", "Walking");
+        FeedEntry entry5 = new FeedEntry(5, "Monica Bing", "Cooking");
+        FeedEntry entry6 = new FeedEntry(6, "Ross Geller", "Dinosaurs");
+
+        long entry1_id = db.createFeedEntry(entry1);
+        long entry2_id = db.createFeedEntry(entry2);
+        long entry3_id = db.createFeedEntry(entry3);
+        long entry4_id = db.createFeedEntry(entry4);
+        long entry5_id = db.createFeedEntry(entry5);
+        long entry6_id = db.createFeedEntry(entry6);
+
+        //getting all entries
+        List<FeedEntry> allEntries = db.getAllEntries();
+        ItemData[] itemsData = new ItemData[allEntries.size()];
+
+        for (int i = 0; i < allEntries.size(); i++) {
+            itemsData[i] = new ItemData(allEntries.get(i).getUsername(), R.drawable.help, allEntries.get(i).getActivity());
+        }
 
         activityRecognition = (Button) findViewById(R.id.button_activity);
         activityRecognition.setOnClickListener(this);
 
 
-        mDrawerList = (ListView)findViewById(R.id.navList);
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.navList);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
 
         addDrawerItems();
@@ -52,13 +77,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         //set up recycler view
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
-        ItemData[] itemsData = {new ItemData("Phoebe Buffay", R.drawable.help),
-                new ItemData("Joey Tribbiani", R.drawable.content_discard),
-                new ItemData("Rachel Greene", R.drawable.collections_cloud),
-                new ItemData("Chandler Bing", R.drawable.rating_favorite),
-                new ItemData("Monica Geller", R.drawable.rating_good),
-                new ItemData("Ross Geller", R.drawable.rating_important)};
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         MyAdapter myAdapter = new MyAdapter(itemsData);
@@ -67,7 +85,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     }
 
     private void addDrawerItems() {
-        String[] sections = { "Section 1", "Section 2", "Section 3", "Section 4", "Section 5" };
+        String[] sections = {"Section 1", "Section 2", "Section 3", "Section 4", "Section 5"};
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, sections);
         mDrawerList.setAdapter(mAdapter);
 
