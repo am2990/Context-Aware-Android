@@ -21,7 +21,7 @@ import android.widget.Toast;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+public class MainActivity extends ActionBarActivity {
 
     Button activityRecognition;
     FeedReaderDbHelper db;
@@ -36,6 +36,24 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         db = new FeedReaderDbHelper(getApplicationContext());
+
+        //Buttons
+        Button activity = (Button) findViewById(R.id.button_activity);
+        Button sensor = (Button) findViewById(R.id.sensor_button);
+
+        activity.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, RecognitionAPIActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        sensor.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Sensors.class);
+                startActivity(intent);
+            }
+        });
 
         //create entries
         FeedEntry entry1 = new FeedEntry(1, "Phoebe Buffay", "Sleeping");
@@ -59,10 +77,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         for (int i = 0; i < allEntries.size(); i++) {
             itemsData[i] = new ItemData(allEntries.get(i).getUsername(), R.drawable.help, allEntries.get(i).getActivity());
         }
-
-        activityRecognition = (Button) findViewById(R.id.button_activity);
-        activityRecognition.setOnClickListener(this);
-
 
         mDrawerList = (ListView) findViewById(R.id.navList);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -159,9 +173,4 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onClick(View view) {
-        Intent intent = new Intent(this, RecognitionAPIActivity.class);
-        startActivity(intent);
-    }
 }
