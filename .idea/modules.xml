@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Stalk.iml" filepath="$PROJECT_DIR$/Stalk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Context-Aware-Android.iml" filepath="$PROJECT_DIR$/Context-Aware-Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
