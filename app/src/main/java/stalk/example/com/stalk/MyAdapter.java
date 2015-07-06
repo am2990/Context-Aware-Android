@@ -51,6 +51,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         viewHolder.txtViewTitle.setText(itemsData[position].getTitle());
         viewHolder.imgViewIcon.setImageResource(itemsData[position].getImageUrl());
+        viewHolder.txtViewActivity.setText(itemsData[position].getActivity());
 
 
     }
@@ -67,6 +68,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         private final Context context;
         public TextView txtViewTitle;
         public ImageView imgViewIcon;
+        public TextView txtViewActivity;
 
         public ViewHolder(View v, View itemLayoutView) {
             super(itemLayoutView);
@@ -74,6 +76,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             itemLayoutView.setOnClickListener(this);
             txtViewTitle = (TextView) itemLayoutView.findViewById(R.id.item_title);
             imgViewIcon = (ImageView) itemLayoutView.findViewById(R.id.item_icon);
+            txtViewActivity = (TextView) itemLayoutView.findViewById(R.id.item_activity);
         }
 
         @Override
@@ -81,14 +84,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             Toast.makeText(v.getContext(), "Set up your profile!", Toast.LENGTH_SHORT).show();
 
             String value = txtViewTitle.getText().toString();
+
             imgViewIcon.buildDrawingCache();
             Bitmap b = imgViewIcon.getDrawingCache();
             ByteArrayOutputStream bs = new ByteArrayOutputStream();
             b.compress(Bitmap.CompressFormat.PNG, 50, bs);
 
+            String activity_name = txtViewActivity.getText().toString();
+
             Intent userprofile = new Intent(context, UserProfileActivity.class);
             userprofile.putExtra("key", value);
             userprofile.putExtra("byteArray", bs.toByteArray());
+            userprofile.putExtra("activity", activity_name);
 
             context.startActivity(userprofile);
         }

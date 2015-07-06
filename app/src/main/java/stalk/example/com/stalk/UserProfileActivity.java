@@ -18,11 +18,15 @@ public class UserProfileActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         Bundle bun = new Bundle();
         bun = getIntent().getExtras();
-        String value = bun.getString("key");        //username
+        //username
+        String value = bun.getString("key");
+        //usericon
         Bitmap b = BitmapFactory.decodeByteArray(
-                getIntent().getByteArrayExtra("byteArray"), 0, getIntent().getByteArrayExtra("byteArray").length);      //usericon
+                getIntent().getByteArrayExtra("byteArray"),
+                0, getIntent().getByteArrayExtra("byteArray").length);
+        String activity_name = bun.getString("activity");
 
-        //create textview
+        //create textview for username
         TextView username = new TextView(this);
         username.setTextSize(20);
         username.setPadding(240, 20, 0, 0);
@@ -32,10 +36,17 @@ public class UserProfileActivity extends ActionBarActivity {
         ImageView usericon = new ImageView(this);
         usericon.setImageBitmap(b);
 
+        //create textview for activity
+        TextView activity = new TextView(this);
+        activity.setTextSize(15);
+        activity.setPadding(280, 20, 0, 0);
+        activity.setText(activity_name);
+
         LinearLayout profile = new LinearLayout(this);
         profile.setOrientation(LinearLayout.VERTICAL);
         profile.addView(username);
         profile.addView(usericon);
+        profile.addView(activity);
 
         setContentView(profile);
     }

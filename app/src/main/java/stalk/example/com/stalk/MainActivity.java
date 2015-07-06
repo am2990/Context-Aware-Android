@@ -50,7 +50,7 @@ public class MainActivity extends ActionBarActivity {
 
         sensor.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Sensors.class);
+                Intent intent = new Intent(MainActivity.this, SensorsActivity.class);
                 startActivity(intent);
             }
         });
@@ -58,7 +58,7 @@ public class MainActivity extends ActionBarActivity {
         //create entries
         FeedEntry entry1 = new FeedEntry(1, "Phoebe Buffay", "Sleeping");
         FeedEntry entry2 = new FeedEntry(2, "Joey Tribbiani", "Eating");
-        FeedEntry entry3 = new FeedEntry(3, "Rachel Greene", "Shopping");
+        FeedEntry entry3 = new FeedEntry(3, "Rachael Greene", "Shopping");
         FeedEntry entry4 = new FeedEntry(4, "Chandler Bing", "Walking");
         FeedEntry entry5 = new FeedEntry(5, "Monica Bing", "Cooking");
         FeedEntry entry6 = new FeedEntry(6, "Ross Geller", "Dinosaurs");
