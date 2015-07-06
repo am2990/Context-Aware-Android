@@ -1,47 +1,119 @@
 package stalk.example.com.stalk;
 
-import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+
+import java.io.IOException;
 
 
-public class SensorsActivity extends ActionBarActivity implements SensorEventListener{
-    private LinearLayout layout;
+public class SensorsActivity extends ActionBarActivity {
+//    private LinearLayout layout;
+
+    //sound recording
+    Button record, play, stop;
+    private MediaRecorder myAudioRecorder;
+    private String outputFile = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensors);
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
+//        LinearLayout layout = new LinearLayout(this);
+//        layout.setOrientation(LinearLayout.VERTICAL);
+//
+//        SensorManager mSensorManager;
+//        Sensor mLight;
+//
+//        // Get an instance of the sensor service, and use that to get an instance of a particular sensor.
+//        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+//        mLight = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+//
+//        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+//        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+//        String ssid = wifiInfo.getSSID();
+//
+//        //text view for wifi sensor
+//        TextView titleView = new TextView(this);
+//        titleView.setText(ssid);
+//        layout.addView(titleView);
+//
+//        setContentView(layout);
 
-        SensorManager mSensorManager;
-        Sensor mLight;
+        record = (Button)findViewById(R.id.button_record);
+        play = (Button)findViewById(R.id.button_play);
+        stop = (Button)findViewById(R.id.button_stop);
 
-        // Get an instance of the sensor service, and use that to get an instance of a particular sensor.
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mLight = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        stop.setEnabled(false);
+        play.setEnabled(false);
+        outputFile = Environment.getExternalStorageDirectory().getAbsolutePath() + "/recording.3gp";;
 
-        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        String ssid = wifiInfo.getSSID();
+        myAudioRecorder = new MediaRecorder();
+        myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
+        myAudioRecorder.setOutputFile(outputFile);
 
-        //text view for wifi sensor
-        TextView titleView = new TextView(this);
-        titleView.setText(ssid);
-        layout.addView(titleView);
+        record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    myAudioRecorder.prepare();
+                    myAudioRecorder.start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                }
 
-        setContentView(layout);
+                record.setEnabled(false);
+                stop.setEnabled(true);
+
+                Toast.makeText(getApplicationContext(), "Recording started", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myAudioRecorder.stop();
+                myAudioRecorder.release();
+                myAudioRecorder = null;
+
+                stop.setEnabled(false);
+                play.setEnabled(true);
+                Toast.makeText(getApplicationContext(), "Audio recorded successfully",Toast.LENGTH_LONG).show();
+            }
+        });
+
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) throws IllegalArgumentException, SecurityException, IllegalStateException {
+                MediaPlayer m = new MediaPlayer();
+
+                try {
+                    m.setDataSource(outputFile);
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    m.prepare();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+                m.start();
+                Toast.makeText(getApplicationContext(), "Playing audio", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -66,21 +138,21 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        float light_intensity = event.values[0];
-        String light_value = Float.toString(light_intensity);
-
-        //text view for light intensity
-        TextView light = new TextView(this);
-        light.setTextSize(20);
-        light.setText(light_value);
-        layout.addView(light);
-
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
+//    @Override
+//    public void onSensorChanged(SensorEvent event) {
+//        float light_intensity = event.values[0];
+//        String light_value = Float.toString(light_intensity);
+//
+//        //text view for light intensity
+//        TextView light = new TextView(this);
+//        light.setTextSize(20);
+//        light.setText(light_value);
+//        layout.addView(light);
+//
+//    }
+//
+//    @Override
+//    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+//
+//    }
 }
