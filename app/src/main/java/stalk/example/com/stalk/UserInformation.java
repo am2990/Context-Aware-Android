@@ -3,20 +3,29 @@ package stalk.example.com.stalk;
 /**
  * Created by Srishti Sengupta on 6/8/2015.
  */
-public class FeedEntry {
-    //FeedEntry Model
+public class UserInformation {
+    //UserInformation Model
     private long id;
     private String username;
     private String activity;
+    //image variable
+    private String timestamp;
 
-    //constructor
-    public FeedEntry(long id, String username, String activity) {
+    //constructors
+    public UserInformation(long id, String username, String activity) {
         this.id = id;
         this.username = username;
         this.activity = activity;
     }
 
-    public FeedEntry() {
+    public UserInformation(long id, String username, String activity, String timestamp) {
+        this.id = id;
+        this.username = username;
+        this.activity = activity;
+        this.timestamp = timestamp;
+    }
+
+    public UserInformation() {
         this.id = id;
         this.username = username;
         this.activity = activity;
@@ -48,4 +57,11 @@ public class FeedEntry {
         this.activity = activity;
     }
 
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
 }
