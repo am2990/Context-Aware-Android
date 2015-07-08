@@ -24,7 +24,7 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity {
 
     Button activityRecognition;
-    FeedReaderDbHelper db;
+    DatabaseHelper db;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<String> mAdapter;
@@ -35,7 +35,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        db = new FeedReaderDbHelper(getApplicationContext());
+        db = new DatabaseHelper(getApplicationContext());
 
         //Buttons
         Button activity = (Button) findViewById(R.id.button_activity);
@@ -56,12 +56,12 @@ public class MainActivity extends ActionBarActivity {
         });
 
         //create entries
-        FeedEntry entry1 = new FeedEntry(1, "Phoebe Buffay", "Sleeping");
-        FeedEntry entry2 = new FeedEntry(2, "Joey Tribbiani", "Eating");
-        FeedEntry entry3 = new FeedEntry(3, "Rachael Greene", "Shopping");
-        FeedEntry entry4 = new FeedEntry(4, "Chandler Bing", "Walking");
-        FeedEntry entry5 = new FeedEntry(5, "Monica Bing", "Cooking");
-        FeedEntry entry6 = new FeedEntry(6, "Ross Geller", "Dinosaurs");
+        UserInformation entry1 = new UserInformation(1, "Phoebe Buffay", "Sleeping");
+        UserInformation entry2 = new UserInformation(2, "Joey Tribbiani", "Eating");
+        UserInformation entry3 = new UserInformation(3, "Rachael Greene", "Shopping");
+        UserInformation entry4 = new UserInformation(4, "Chandler Bing", "Walking");
+        UserInformation entry5 = new UserInformation(5, "Monica Bing", "Cooking");
+        UserInformation entry6 = new UserInformation(6, "Ross Geller", "Dinosaurs");
 
         long entry1_id = db.createFeedEntry(entry1);
         long entry2_id = db.createFeedEntry(entry2);
@@ -71,7 +71,7 @@ public class MainActivity extends ActionBarActivity {
         long entry6_id = db.createFeedEntry(entry6);
 
         //getting all entries
-        List<FeedEntry> allEntries = db.getAllEntries();
+        List<UserInformation> allEntries = db.getAllEntries();
         ItemData[] itemsData = new ItemData[allEntries.size()];
 
         for (int i = 0; i < allEntries.size(); i++) {

@@ -5,6 +5,7 @@ package stalk.example.com.stalk;
  */
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,8 @@ public class DetectedActivitiesAdapter extends ArrayAdapter<DetectedActivity> {
      * @param detectedActivities the freshly detected activities
      */
     protected void updateActivities(ArrayList<DetectedActivity> detectedActivities) {
+
+        Log.d("Activities", "Size of detectted activitis" + detectedActivities.size());
         HashMap<Integer, Integer> detectedActivitiesMap = new HashMap<>();
         for (DetectedActivity activity : detectedActivities) {
             detectedActivitiesMap.put(activity.getType(), activity.getConfidence());
