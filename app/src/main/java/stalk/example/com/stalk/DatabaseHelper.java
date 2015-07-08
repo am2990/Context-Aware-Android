@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by Srishti Sengupta on 6/8/2015.
  */
-public class FeedReaderDbHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper {
 
     //Logcat tag
     private static final String LOG = "Database Helper";
@@ -37,7 +37,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
             + TABLE_FEED_ENTRY + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME
             + " TEXT," + KEY_ACTIVITY + " TEXT" + ")";
 
-    public FeedReaderDbHelper(Context context) {
+    public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -56,8 +56,8 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    //Create FeedEntry
-    public long createFeedEntry(FeedEntry feedEntry) {
+    //Create UserInformation
+    public long createFeedEntry(UserInformation feedEntry) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -71,7 +71,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     }
 
     //fetch single row containing user data
-    public FeedEntry getFeedEntry(long feedEntry_id) {
+    public UserInformation getFeedEntry(long feedEntry_id) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         String selectQuery = "SELECT  * FROM " + TABLE_FEED_ENTRY + " WHERE "
@@ -84,7 +84,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         if (c != null)
             c.moveToFirst();
 
-        FeedEntry entry = new FeedEntry();
+        UserInformation entry = new UserInformation();
         entry.setId(c.getInt(c.getColumnIndex(KEY_ID)));
         entry.setUsername((c.getString(c.getColumnIndex(KEY_USERNAME))));
         entry.setActivity(c.getString(c.getColumnIndex(KEY_ACTIVITY)));
@@ -93,8 +93,8 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
     }
 
     //fetch all rows
-    public List<FeedEntry> getAllEntries() {
-        List<FeedEntry> allEntries = new ArrayList<FeedEntry>();
+    public List<UserInformation> getAllEntries() {
+        List<UserInformation> allEntries = new ArrayList<UserInformation>();
         String selectQuery = "SELECT * FROM " + TABLE_FEED_ENTRY;
 
         Log.e(LOG, selectQuery);
@@ -105,7 +105,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         // looping through all row entries and adding to list
         if (c.moveToFirst()) {
             do {
-                FeedEntry td = new FeedEntry();
+                UserInformation td = new UserInformation();
                 td.setId(c.getInt((c.getColumnIndex(KEY_ID))));
                 td.setUsername((c.getString(c.getColumnIndex(KEY_USERNAME))));
                 td.setActivity(c.getString(c.getColumnIndex(KEY_ACTIVITY)));

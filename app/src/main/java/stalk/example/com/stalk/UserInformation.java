@@ -3,20 +3,20 @@ package stalk.example.com.stalk;
 /**
  * Created by Srishti Sengupta on 6/8/2015.
  */
-public class FeedEntry {
-    //FeedEntry Model
+public class UserInformation {
+    //UserInformation Model
     private long id;
     private String username;
     private String activity;
 
     //constructor
-    public FeedEntry(long id, String username, String activity) {
+    public UserInformation(long id, String username, String activity) {
         this.id = id;
         this.username = username;
         this.activity = activity;
     }
 
-    public FeedEntry() {
+    public UserInformation() {
         this.id = id;
         this.username = username;
         this.activity = activity;
