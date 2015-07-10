@@ -1,4 +1,4 @@
-package stalk.example.com.stalk;
+package stalk.example.com.stalk.ActivityRecognitionAPI;
 
 import android.app.IntentService;
 import android.content.Intent;

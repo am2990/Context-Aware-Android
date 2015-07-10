@@ -1,4 +1,4 @@
-package stalk.example.com.stalk;
+package stalk.example.com.stalk.ActivityRecognitionAPI;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -25,6 +25,8 @@ import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.DetectedActivity;
 
 import java.util.ArrayList;
+
+import stalk.example.com.stalk.R;
 
 public class RecognitionAPIActivity extends ActionBarActivity implements
         ConnectionCallbacks, OnConnectionFailedListener, ResultCallback<Status> {

@@ -1,4 +1,4 @@
-package stalk.example.com.stalk;
+package stalk.example.com.stalk.Database;
 
 import android.content.ContentValues;
 import android.content.Context;

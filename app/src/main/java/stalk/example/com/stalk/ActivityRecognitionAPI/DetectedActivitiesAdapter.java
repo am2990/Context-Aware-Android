@@ -1,4 +1,4 @@
-package stalk.example.com.stalk;
+package stalk.example.com.stalk.ActivityRecognitionAPI;
 
 /**
  * Created by apurv on 6/22/2015.
@@ -17,6 +17,8 @@ import com.google.android.gms.location.DetectedActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import stalk.example.com.stalk.R;
 
 /**
  * Adapter that is backed by an array of {@code DetectedActivity} objects. Finds UI elements in the

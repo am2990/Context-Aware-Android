@@ -1,4 +1,4 @@
-package stalk.example.com.stalk;
+package stalk.example.com.stalk.Database;
 
 /**
  * Created by Srishti Sengupta on 7/8/2015.

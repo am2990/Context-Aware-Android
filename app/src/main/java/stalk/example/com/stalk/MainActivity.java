@@ -20,6 +20,10 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import stalk.example.com.stalk.ActivityRecognitionAPI.RecognitionAPIActivity;
+import stalk.example.com.stalk.Database.DatabaseHelper;
+import stalk.example.com.stalk.Database.UserInformation;
+
 
 public class MainActivity extends ActionBarActivity {
 
