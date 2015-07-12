@@ -1,14 +1,17 @@
 package stalk.example.com.stalk;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +21,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import stalk.example.com.stalk.ActivityRecognitionAPI.RecognitionAPIActivity;
@@ -39,6 +44,9 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        registerReceiver(new UserPresentBroadcastReceiver(), new IntentFilter("android.intent.action.USER_PRESENT"));
+
         db = new DatabaseHelper(getApplicationContext());
 
         //Buttons
@@ -175,6 +183,21 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // If the screen is off then the device has been locked
+        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        boolean isScreenOn = powerManager.isScreenOn();
+
+        if (!isScreenOn) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String lockTimeStamp = dateFormat.format(new Date());
+            Log.d("Timestamp LOCKED: ", lockTimeStamp);
+        }
     }
 
 }

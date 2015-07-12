@@ -13,6 +13,12 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <receiver android:name=".UserPresentBroadcastReceiver">
+        <intent-filter>
+            <action android:name="android.intent.action.USER_PRESENT" />
+        </intent-filter>
+    </receiver>
+
 
     <application
         android:allowBackup="true"

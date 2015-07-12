@@ -59,6 +59,7 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensors);
+
         layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
