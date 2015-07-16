@@ -26,6 +26,8 @@ public final class Constants {
      * app may prefer to request less frequent updates.
      */
     public static final long DETECTION_INTERVAL_IN_MILLISECONDS = 0;
+
+    public static final long SERVICE_REQUEST_INTERVAL_IN_MILLISECONDS = 5000;
     /**
      * List of DetectedActivity types that we monitor in this sample.
      */
