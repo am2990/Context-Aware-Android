@@ -1,49 +1,55 @@
 package stalk.example.com.stalk;
 
-import android.app.IntentService;
+import android.app.Service;
 import android.content.Intent;
+import android.os.IBinder;
 import android.widget.Toast;
 
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p>
- * TODO: Customize class - update intent actions, extra parameters and static
- * helper methods.
- */
-public class SensorService extends IntentService {
-    /**
-     * A constructor is required, and must call the super IntentService(String)
-     * constructor with a name for the worker thread.
-     */
-    public SensorService() {
-        super("SensorIntentService");
-    }
+public class SensorService extends Service {
+
+    //indicates how to behave if service is killed
+    int mStartMode;
+
+    //interface for clients that bind
+    IBinder mBinder;
+
+    // indicates whether onRebind should be used
+    boolean mAllowRebind;
 
     /**
-     * The IntentService calls this method from the default worker thread with
-     * the intent that started the service. When this method returns, IntentService
-     * stops the service, as appropriate.
+     * Called when the service is being created.
      */
     @Override
-    protected void onHandleIntent(Intent intent) {
-        // Do work here
-        // For now we just sleep for 5 seconds.
-        long endTime = System.currentTimeMillis() + 5 * 1000;
-        while (System.currentTimeMillis() < endTime) {
-            synchronized (this) {
-                try {
-                    wait(endTime - System.currentTimeMillis());
-                } catch (Exception e) {
-                }
-            }
-        }
+    public void onCreate() {
+        Toast.makeText(this, "Service was Created", Toast.LENGTH_LONG).show();
     }
 
+    //service starts because of call to startService()
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
-        return super.onStartCommand(intent, flags, startId);
+        // Perform your long running operations here. Fetch sensor data here from SensorsActivity
+        Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
+        return mStartMode;
+    }
+
+    //called when client binds to the service with bindService()
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    // Called when all clients have unbound with unbindService()
+    @Override
+    public boolean onUnbind(Intent intent) {
+        return mAllowRebind;
+    }
+
+    /**
+     * Called when The service is no longer used and is being destroyed
+     */
+    @Override
+    public void onDestroy() {
+        Toast.makeText(this, "Service Destroyed", Toast.LENGTH_LONG).show();
     }
 
 }
