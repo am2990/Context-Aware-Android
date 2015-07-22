@@ -113,15 +113,15 @@ public class MainActivity extends ActionBarActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
-    // Start the service
-    public void startService(View view) {
-        startService(new Intent(this, SensorService.class));
-    }
-
-    // Stop the service
-    public void stopService(View view) {
-        stopService(new Intent(this, SensorService.class));
-    }
+//    // Start the service
+//    public void startService(View view) {
+//        startService(new Intent(this, SensorService.class));
+//    }
+//
+//    // Stop the service
+//    public void stopService(View view) {
+//        stopService(new Intent(this, SensorService.class));
+//    }
 
     private void addDrawerItems() {
         String[] sections = {"Section 1", "Section 2", "Section 3", "Section 4", "Section 5"};
