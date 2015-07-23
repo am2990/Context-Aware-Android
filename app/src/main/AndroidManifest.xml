@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    <receiver android:name=".UserPresentBroadcastReceiver">
+    <receiver android:name=".UserPresentBroadcastReceiver" >
         <intent-filter>
             <action android:name="android.intent.action.USER_PRESENT" />
         </intent-filter>
@@ -28,8 +28,11 @@
         DON"T CHANGE android:name variable
         for risk of breaking code due to dependence on explicit intents to start or bind the service
         -->
-        <service android:name=".SensorService" />
 
+        <service
+            android:name=".SensorsService"
+            android:exported="false" >
+        </service>
 
         <!-- main/home activity (it has no parent activity) -->
         <activity

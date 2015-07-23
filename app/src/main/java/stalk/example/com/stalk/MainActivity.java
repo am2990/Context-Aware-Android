@@ -45,8 +45,6 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, SensorService.class);
-        startService(intent);
 
         registerReceiver(new UserPresentBroadcastReceiver(), new IntentFilter("android.intent.action.USER_PRESENT"));
 
@@ -115,12 +113,12 @@ public class MainActivity extends ActionBarActivity {
 
 //    // Start the service
 //    public void startService(View view) {
-//        startService(new Intent(this, SensorService.class));
+//        startService(new Intent(this, SensorsService.class));
 //    }
 //
 //    // Stop the service
 //    public void stopService(View view) {
-//        stopService(new Intent(this, SensorService.class));
+//        stopService(new Intent(this, SensorsService.class));
 //    }
 
     private void addDrawerItems() {

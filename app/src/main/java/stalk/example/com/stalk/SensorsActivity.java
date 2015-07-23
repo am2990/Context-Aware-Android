@@ -5,53 +5,84 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.io.IOException;
 
 
 public class SensorsActivity extends ActionBarActivity implements SensorEventListener {
     private LinearLayout layout;
 
     //ambient sound
-    private AudioRecord ar = null;
-    private int minSize;
+    private int ambient_sound;
+
+    private static final String LOG = "Sensor Activity";
+    private MediaRecorder mRecorder = null;
 
     public void start() {
-        minSize = AudioRecord.getMinBufferSize(8000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
-        ar = new AudioRecord(MediaRecorder.AudioSource.MIC, 8000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, minSize);
-        ar.startRecording();
+        if (mRecorder == null) {
+            mRecorder = new MediaRecorder();
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            mRecorder.setOutputFile("/dev/null");
+
+            try {
+                mRecorder.prepare();
+                mRecorder.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     public void stop() {
-        if (ar != null) {
-            ar.stop();
+        if (mRecorder != null) {
+            mRecorder.stop();
+            mRecorder.release();
+            mRecorder = null;
         }
     }
 
     public void getAmplitude() {
-        short[] buffer = new short[minSize];
-        ar.read(buffer, 0, minSize);
-        int max = 0;
-        for (short s : buffer) {
-            if (Math.abs(s) > max) {
-                max = Math.abs(s);
-            }
-        }
-        String ambient_sound = Double.toString(max);
+//        short[] buffer = new short[minSize*10];
+//        int i = 0;
+//        while(i++ < 10){
+//            ar.read(buffer, minSize * i, minSize);
+//
+//            int max = 0;
+//            for (short s : buffer) {
+//                if (Math.abs(s) > max) {
+//                    max = Math.abs(s);
+//                }
+//            }
+//            ambient_sound = Double.toString(max);
+//        }
+        //make buffer, put readings in buffer, getMaxValue from buffer
+//        int[] buffer = new int[1000];
+
+        if (mRecorder != null)
+            ambient_sound =   mRecorder.getMaxAmplitude();
+        else
+            ambient_sound = 0;
+
+        Log.d(LOG, "Ambient Sound: " + ambient_sound);
+
 
         //text view for ambient sound
         TextView sound = new TextView(this);
         sound.setTextSize(15);
-        sound.setText("Sound Intensity: " + ambient_sound);
+        sound.setText("Sound Intensity: " + Integer.toString(ambient_sound));
         layout.addView(sound);
     }
 
@@ -82,15 +113,11 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
         layout.addView(titleView);
 
         //sound sensor analyses max amplitude recorded
-        for (int j = 0; j < 5; j++) {
+        for (int j = 0; j < 1000; j++) {
             start();
-            int i = 0;
-            while (i < 1000000000) {
-                i++;
-            }
-            stop();
             getAmplitude();
         }
+        stop();
 
         setContentView(layout);
 
