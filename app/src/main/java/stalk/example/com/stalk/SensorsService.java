@@ -3,6 +3,7 @@ package stalk.example.com.stalk;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -10,9 +11,12 @@ import android.hardware.SensorManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.os.PowerManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -78,6 +82,7 @@ public class SensorsService extends IntentService implements SensorEventListener
 
     }
 
+
     @Override
     public void onCreate(){
         Log.d(TAG, "Service Service onCreate");
@@ -85,6 +90,10 @@ public class SensorsService extends IntentService implements SensorEventListener
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mLight = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         mSensorManager.registerListener(this, mLight, SensorManager.SENSOR_DELAY_NORMAL);
+
+        //registered broadcast receivers for screen unlock activity and wifi ssid change activity
+        registerReceiver(new UserPresentBroadcastReceiver(), new IntentFilter("android.intent.action.USER_PRESENT"));
+        registerReceiver(new WiFiSSIDChangeBroadcastReceiver(), new IntentFilter("android.net.wifi.STATE_CHANGE"));
     }
 
     @Override
@@ -101,19 +110,11 @@ public class SensorsService extends IntentService implements SensorEventListener
             @Override
             public void run() {
 
-                /*WIFI SSID*/
-//                WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-//                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-//                String ssid = wifiInfo.getSSID();
-//                Log.d("WiFi SSID: ", ssid);
-
-
                 /*AMBIENT LIGHT*/
                 Log.d("Ambient Light: ", light_value);
 
                 /*AMBIENT SOUND*/
                 start();
-                //delay?
                 stop();
                 getAmplitude();
                 Log.d("Ambient Sound: ", ambient_sound);

@@ -47,6 +47,7 @@ public class MainActivity extends ActionBarActivity {
 
 
         registerReceiver(new UserPresentBroadcastReceiver(), new IntentFilter("android.intent.action.USER_PRESENT"));
+        registerReceiver(new WiFiSSIDChangeBroadcastReceiver(), new IntentFilter("android.net.wifi.STATE_CHANGE"));
 
         db = new DatabaseHelper(getApplicationContext());
 
@@ -196,6 +197,8 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    //detects screen lock activity
     @Override
     protected void onPause() {
         super.onPause();

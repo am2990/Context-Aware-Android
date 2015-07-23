@@ -22,11 +22,5 @@ public class UserPresentBroadcastReceiver extends BroadcastReceiver {
             String unlockTimeStamp = dateFormat.format(new Date());
             Log.d("Timestamp UNLOCKED: ", unlockTimeStamp);
         }
-        //TODO implement a receiver to fetch SSID change
-//        else if(keyguardManager.inKeyguardRestrictedInputMode()){
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//            String lockTimeStamp = dateFormat.format(new Date());
-//            Log.d("Timestamp LOCKED: ", lockTimeStamp);
-//        }
     }
 }
