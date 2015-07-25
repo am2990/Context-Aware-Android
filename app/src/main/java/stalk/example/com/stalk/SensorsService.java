@@ -8,16 +8,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
 import android.media.MediaRecorder;
-import android.os.PowerManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -40,10 +35,14 @@ public class SensorsService extends IntentService implements SensorEventListener
     //timer for service
     private final Timer t = new Timer();
 
+    //broadcast receivers
+    private UserPresentBroadcastReceiver user_present;
+    private WiFiSSIDChangeBroadcastReceiver wifi_change;
+
     public SensorsService() {
         super("SensorsService");
     }
-    private UserPresentBroadcastReceiver c;
+
     // Ambient Sound
 
     public void start() {
@@ -60,7 +59,6 @@ public class SensorsService extends IntentService implements SensorEventListener
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -73,21 +71,6 @@ public class SensorsService extends IntentService implements SensorEventListener
     }
 
     public void getAmplitude() {
-//        short[] buffer = new short[minSize*10];
-//        int i = 0;
-//        while(i++ < 10){
-//            ar.read(buffer, minSize * i, minSize);
-//
-//            int max = 0;
-//            for (short s : buffer) {
-//                if (Math.abs(s) > max) {
-//                    max = Math.abs(s);
-//                }
-//            }
-//            ambient_sound = Double.toString(max);
-//        }
-        //make buffer, put readings in buffer, getMaxValue from buffer
-//        int[] buffer = new int[1000];
 
         if (mRecorder != null) {
             int[] buffer = new int[1000];
@@ -115,31 +98,35 @@ public class SensorsService extends IntentService implements SensorEventListener
     public void onCreate(){
         super.onCreate();
 
-        Toast.makeText(this, "Service Created!", Toast.LENGTH_LONG).show();
-        Log.d(TAG, "Service Service onCreate");
+        Log.d(TAG, "Service onCreate called");
+
         // Get an instance of the sensor service, and use that to get an instance of a particular sensor.
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mLight = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         mSensorManager.registerListener(this, mLight, SensorManager.SENSOR_DELAY_NORMAL);
-        c = new UserPresentBroadcastReceiver();
-//        registered broadcast receivers for screen unlock activity
-        registerReceiver(c, new IntentFilter("android.intent.action.USER_PRESENT"));
 
-//        registered broadcast receivers for WiFi SSID change activity
-//        registerReceiver(new WiFiSSIDChangeBroadcastReceiver(), new IntentFilter("android.net.wifi.STATE_CHANGE"));
+        // registered broadcast receivers for screen unlock activity
+        user_present = new UserPresentBroadcastReceiver();
+        registerReceiver(user_present, new IntentFilter("android.intent.action.USER_PRESENT"));
+
+        //registered broadcast receivers for WiFi SSID change activity
+        wifi_change = new WiFiSSIDChangeBroadcastReceiver();
+        registerReceiver(wifi_change, new IntentFilter("android.net.wifi.STATE_CHANGE"));
+
     }
 
     public void onDestroy() {
-        unregisterReceiver(c);
+        unregisterReceiver(user_present);
+        unregisterReceiver(wifi_change);
+
         super.onDestroy();
-//        Toast.makeText(this, "Service Destroyed", Toast.LENGTH_LONG).show();
-        Log.d(TAG, "Service Service onDestroy");
+        Log.d(TAG, "Service onDestroy called");
 
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.d(TAG, "Service Started!");
+        Log.d(TAG, "onHandleIntent called");
 
         t.scheduleAtFixedRate(new TimerTask() {
             @Override

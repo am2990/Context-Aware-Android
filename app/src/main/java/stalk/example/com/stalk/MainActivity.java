@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -47,9 +48,6 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        registerReceiver(new UserPresentBroadcastReceiver(), new IntentFilter("android.intent.action.USER_PRESENT"));
-//        registerReceiver(new WiFiSSIDChangeBroadcastReceiver(), new IntentFilter("android.net.wifi.STATE_CHANGE"));
-
         db = new DatabaseHelper(getApplicationContext());
 
         //Buttons
@@ -62,6 +60,25 @@ public class MainActivity extends ActionBarActivity {
 
         //service start and stop toggle button
         ToggleButton toggle_button = (ToggleButton) findViewById(R.id.service_toggle_button);
+
+        toggle_button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isChecked){
+                    //Button is ON. Service starts
+                    Intent i = new Intent(MainActivity.this, SensorsService.class);
+                    Toast.makeText(MainActivity.this, "Service Started!", Toast.LENGTH_SHORT).show();
+                    startService(i);
+                }
+                else {
+                    //Button is OFF. Service stops
+                    Intent i = new Intent(MainActivity.this, SensorsService.class);
+                    Toast.makeText(MainActivity.this, "Service Stopped", Toast.LENGTH_SHORT).show();
+                    stopService(i);
+                }
+            }
+        });
 
         //Activity Recognition API
         activity.setOnClickListener(new View.OnClickListener() {
@@ -79,38 +96,13 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-//        //Sensor Background service STARTS
-//        start.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View view) {
-//                Intent i = null;
-//                if(i != null){
-//                    stopService(i);
-//                    return;
-//                }
-//                else {
-//                    i = new Intent(MainActivity.this, SensorsService.class);
-//                    startService(i);
-//                }
-//
-//            }
-//        });
-//
-//        //Sensor Background Service STOPS
-//        stop.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View view) {
-//                stopService(new Intent(MainActivity.this, SensorsService.class));
-//            }
-//        });
-
         //create entries
-        UserInformation entry1 = new UserInformation(1, "Phoebe Buffay", "Sleeping");
-        UserInformation entry2 = new UserInformation(2, "Joey Tribbiani", "Eating");
-        UserInformation entry3 = new UserInformation(3, "Rachael Greene", "Shopping");
-        UserInformation entry4 = new UserInformation(4, "Chandler Bing", "Walking");
-        UserInformation entry5 = new UserInformation(5, "Monica Bing", "Cooking");
-        UserInformation entry6 = new UserInformation(6, "Ross Geller", "Dinosaurs");
+        UserInformation entry1 = new UserInformation(1, "User 1", "Sleeping");
+        UserInformation entry2 = new UserInformation(2, "User 2", "Active");
+        UserInformation entry3 = new UserInformation(3, "User 3", "Active");
+        UserInformation entry4 = new UserInformation(4, "User 4", "Sleeping");
+        UserInformation entry5 = new UserInformation(5, "User 5", "Sleeping");
+        UserInformation entry6 = new UserInformation(6, "User 6", "Active");
 
 //        long entry1_id = db.createFeedEntry(entry1);
 //        long entry2_id = db.createFeedEntry(entry2);

@@ -55,21 +55,6 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
     }
 
     public void getAmplitude() {
-//        short[] buffer = new short[minSize*10];
-//        int i = 0;
-//        while(i++ < 10){
-//            ar.read(buffer, minSize * i, minSize);
-//
-//            int max = 0;
-//            for (short s : buffer) {
-//                if (Math.abs(s) > max) {
-//                    max = Math.abs(s);
-//                }
-//            }
-//            ambient_sound = Double.toString(max);
-//        }
-        //make buffer, put readings in buffer, getMaxValue from buffer
-//        int[] buffer = new int[1000];
 
         if (mRecorder != null)
             ambient_sound =   mRecorder.getMaxAmplitude();
