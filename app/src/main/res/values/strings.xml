@@ -14,6 +14,13 @@
     <string name="sensor_button">Sensors</string>
     <string name="hello_world">Hello world!</string>
 
+    <!-- Service Start Stop Button -->
+    <string name="service_stop_button">Stop</string>
+    <string name="service_start_button">Start</string>
+
+    <!-- Service Toggle button -->
+    <string name="service_toggle_button">Service On/Off</string>
+
 
     //activity recognition API strings
     <string name="title_activity_recognition_api">Recognition API</string>

@@ -1,5 +1,6 @@
 package stalk.example.com.stalk;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
@@ -20,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,9 +47,8 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        registerReceiver(new UserPresentBroadcastReceiver(), new IntentFilter("android.intent.action.USER_PRESENT"));
-        registerReceiver(new WiFiSSIDChangeBroadcastReceiver(), new IntentFilter("android.net.wifi.STATE_CHANGE"));
+//        registerReceiver(new UserPresentBroadcastReceiver(), new IntentFilter("android.intent.action.USER_PRESENT"));
+//        registerReceiver(new WiFiSSIDChangeBroadcastReceiver(), new IntentFilter("android.net.wifi.STATE_CHANGE"));
 
         db = new DatabaseHelper(getApplicationContext());
 
@@ -55,6 +56,14 @@ public class MainActivity extends ActionBarActivity {
         Button activity = (Button) findViewById(R.id.button_activity);
         Button sensor = (Button) findViewById(R.id.sensor_button);
 
+//        //service start and stop button
+//        Button start = (Button) findViewById(R.id.service_start_button);
+//        Button stop = (Button) findViewById(R.id.service_stop_button);
+
+        //service start and stop toggle button
+        ToggleButton toggle_button = (ToggleButton) findViewById(R.id.service_toggle_button);
+
+        //Activity Recognition API
         activity.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, RecognitionAPIActivity.class);
@@ -62,12 +71,38 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        //Sensor Activity
         sensor.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, SensorsActivity.class);
                 startActivity(intent);
             }
         });
+
+//        //Sensor Background service STARTS
+//        start.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View view) {
+//                Intent i = null;
+//                if(i != null){
+//                    stopService(i);
+//                    return;
+//                }
+//                else {
+//                    i = new Intent(MainActivity.this, SensorsService.class);
+//                    startService(i);
+//                }
+//
+//            }
+//        });
+//
+//        //Sensor Background Service STOPS
+//        stop.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View view) {
+//                stopService(new Intent(MainActivity.this, SensorsService.class));
+//            }
+//        });
 
         //create entries
         UserInformation entry1 = new UserInformation(1, "Phoebe Buffay", "Sleeping");
@@ -77,12 +112,12 @@ public class MainActivity extends ActionBarActivity {
         UserInformation entry5 = new UserInformation(5, "Monica Bing", "Cooking");
         UserInformation entry6 = new UserInformation(6, "Ross Geller", "Dinosaurs");
 
-        long entry1_id = db.createFeedEntry(entry1);
-        long entry2_id = db.createFeedEntry(entry2);
-        long entry3_id = db.createFeedEntry(entry3);
-        long entry4_id = db.createFeedEntry(entry4);
-        long entry5_id = db.createFeedEntry(entry5);
-        long entry6_id = db.createFeedEntry(entry6);
+//        long entry1_id = db.createFeedEntry(entry1);
+//        long entry2_id = db.createFeedEntry(entry2);
+//        long entry3_id = db.createFeedEntry(entry3);
+//        long entry4_id = db.createFeedEntry(entry4);
+//        long entry5_id = db.createFeedEntry(entry5);
+//        long entry6_id = db.createFeedEntry(entry6);
 
         //getting all entries
         List<UserInformation> allEntries = db.getAllEntries();
@@ -111,16 +146,6 @@ public class MainActivity extends ActionBarActivity {
         recyclerView.setAdapter(myAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
-
-//    // Start the service
-//    public void startService(View view) {
-//        startService(new Intent(this, SensorsService.class));
-//    }
-//
-//    // Stop the service
-//    public void stopService(View view) {
-//        stopService(new Intent(this, SensorsService.class));
-//    }
 
     private void addDrawerItems() {
         String[] sections = {"Section 1", "Section 2", "Section 3", "Section 4", "Section 5"};
@@ -213,5 +238,4 @@ public class MainActivity extends ActionBarActivity {
             Log.d("Timestamp LOCKED: ", lockTimeStamp);
         }
     }
-
 }
