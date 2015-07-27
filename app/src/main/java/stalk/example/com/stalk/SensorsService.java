@@ -13,6 +13,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,6 +34,8 @@ public class SensorsService extends IntentService implements SensorEventListener
 
     private MediaRecorder mRecorder = null;
     private int ambient_sound;
+    private List<Integer> buffer = new ArrayList<Integer>();
+    private int max_ambient_sound;
 
     //timer for service
     private final Timer t = new Timer();
@@ -73,12 +78,19 @@ public class SensorsService extends IntentService implements SensorEventListener
     public void getAmplitude() {
 
         if (mRecorder != null) {
-            int[] buffer = new int[1000];
-
             ambient_sound = mRecorder.getMaxAmplitude();
+            buffer.add(ambient_sound);
         }
-        else
+        else {
             ambient_sound = 0;
+            buffer.add(ambient_sound);
+        }
+
+        Log.d(TAG, "Ambient Sound: " + ambient_sound);
+
+        //get maximum from buffer
+        Collections.sort(buffer);
+        max_ambient_sound = buffer.get(buffer.size() - 1);
     }
 
     //Ambient Light
@@ -136,12 +148,12 @@ public class SensorsService extends IntentService implements SensorEventListener
                 Log.d("Ambient Light: ", light_value);
 
                 /*AMBIENT SOUND*/
-//                for (int j = 0; j < 1000; j++) {
-//                    start();
-//                    getAmplitude();
-//                }
-//                stop();
-//                Log.d("Ambient Sound: ", ambient_sound);
+                for (int j = 0; j < 1000; j++) {
+                start();
+                getAmplitude();
+                }
+                stop();
+                Log.d("Ambient Sound: ", String.valueOf(max_ambient_sound));
 
             }
         }, 0, Constants.SERVICE_REQUEST_INTERVAL_IN_MILLISECONDS);

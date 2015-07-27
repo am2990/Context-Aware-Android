@@ -17,6 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 public class SensorsActivity extends ActionBarActivity implements SensorEventListener {
@@ -24,6 +27,8 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
 
     //ambient sound
     private int ambient_sound;
+    private List<Integer> buffer = new ArrayList<Integer>();
+    private int max_ambient_sound;
 
     private static final String LOG = "Sensor Activity";
     private MediaRecorder mRecorder = null;
@@ -56,19 +61,20 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
 
     public void getAmplitude() {
 
-        if (mRecorder != null)
-            ambient_sound =   mRecorder.getMaxAmplitude();
-        else
+        if (mRecorder != null) {
+            ambient_sound = mRecorder.getMaxAmplitude();
+            buffer.add(ambient_sound);
+        }
+        else {
             ambient_sound = 0;
+            buffer.add(ambient_sound);
+        }
 
         Log.d(LOG, "Ambient Sound: " + ambient_sound);
 
-
-        //text view for ambient sound
-        TextView sound = new TextView(this);
-        sound.setTextSize(15);
-        sound.setText("Sound Intensity: " + Integer.toString(ambient_sound));
-        layout.addView(sound);
+        //get maximum from buffer
+        Collections.sort(buffer);
+        max_ambient_sound = buffer.get(buffer.size() - 1);
     }
 
     @Override
@@ -98,11 +104,18 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
         layout.addView(titleView);
 
         //sound sensor analyses max amplitude recorded
+
         for (int j = 0; j < 1000; j++) {
             start();
             getAmplitude();
         }
         stop();
+
+        //text view for ambient sound
+        TextView sound = new TextView(this);
+        sound.setTextSize(15);
+        sound.setText("Sound Intensity: " + Integer.toString(max_ambient_sound));
+        layout.addView(sound);
 
         setContentView(layout);
 
