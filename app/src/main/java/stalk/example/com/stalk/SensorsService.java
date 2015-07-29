@@ -12,9 +12,18 @@ import android.media.MediaRecorder;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -31,11 +40,17 @@ public class SensorsService extends IntentService implements SensorEventListener
 
     private float light_intensity;
     private String light_value;
+    public static boolean isRunning = false;
 
     private MediaRecorder mRecorder = null;
     private int ambient_sound;
     private List<Integer> buffer = new ArrayList<Integer>();
     private int max_ambient_sound;
+
+    private String sensorVal;
+    private JSONObject user_information;
+    private JSONObject sensor_data;
+    private JSONArray sensors;
 
     //timer for service
     private final Timer t = new Timer();
@@ -86,7 +101,7 @@ public class SensorsService extends IntentService implements SensorEventListener
             buffer.add(ambient_sound);
         }
 
-        Log.d(TAG, "Ambient Sound: " + ambient_sound);
+//        Log.d(TAG, "Ambient Sound: " + ambient_sound);
 
         //get maximum from buffer
         Collections.sort(buffer);
@@ -105,6 +120,68 @@ public class SensorsService extends IntentService implements SensorEventListener
 
     }
 
+    public void writeToSensorFile() {
+        //writing text to file
+        try
+        {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String timestamp = dateFormat.format(new Date());
+
+            sensor_data = new JSONObject();
+            sensor_data.put("Ambient Light", light_value);
+            sensor_data.put("Ambient Sound", max_ambient_sound);
+
+            sensors = new JSONArray();
+            sensors.put(sensor_data);
+
+            user_information = new JSONObject();
+            user_information.put("Timestamp", timestamp);
+            user_information.put("Username", "User1");  //fetch from database later
+            user_information.put("Sensors", sensors);
+
+
+            FileOutputStream fileOutputStream = openFileOutput("SensorData.txt", MODE_APPEND);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+
+//            sensorVal = WiFiSSIDChangeBroadcastReceiver.ssid + " ," + light_value + " ," + max_ambient_sound;
+//            outputStreamWriter.write(sensorVal);
+
+            outputStreamWriter.write(user_information.toString());
+            outputStreamWriter.close();
+
+            //display file saved message
+            Toast.makeText(getBaseContext(), "File saved successfully!",
+                    Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void readFromSensorFile(){
+        //reading text from file
+        try {
+            FileInputStream fileIn=openFileInput("SensorData.txt");
+            InputStreamReader InputRead= new InputStreamReader(fileIn);
+
+            char[] inputBuffer= new char[1000];
+            String s="";
+            int charRead;
+
+            while ((charRead=InputRead.read(inputBuffer))>0) {
+                // char to string conversion
+                String readstring=String.copyValueOf(inputBuffer,0,charRead);
+                s +=readstring;
+            }
+            InputRead.close();
+            Log.d("JSON Format: ", s);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onCreate(){
@@ -119,17 +196,20 @@ public class SensorsService extends IntentService implements SensorEventListener
 
         // registered broadcast receivers for screen unlock activity
         user_present = new UserPresentBroadcastReceiver();
-        registerReceiver(user_present, new IntentFilter("android.intent.action.USER_PRESENT"));
+
 
         //registered broadcast receivers for WiFi SSID change activity
         wifi_change = new WiFiSSIDChangeBroadcastReceiver();
-        registerReceiver(wifi_change, new IntentFilter("android.net.wifi.STATE_CHANGE"));
+
+
+        isRunning = true;
 
     }
 
     public void onDestroy() {
-        unregisterReceiver(user_present);
-        unregisterReceiver(wifi_change);
+
+//        unregisterReceiver(user_present);
+//        unregisterReceiver(wifi_change);
 
         super.onDestroy();
         Log.d(TAG, "Service onDestroy called");
@@ -144,6 +224,15 @@ public class SensorsService extends IntentService implements SensorEventListener
             @Override
             public void run() {
 
+                registerReceiver(user_present, new IntentFilter("android.intent.action.USER_PRESENT"));
+                registerReceiver(wifi_change, new IntentFilter("android.net.wifi.STATE_CHANGE"));
+
+                if(!isRunning){
+                    unregisterReceiver(user_present);
+                    unregisterReceiver(wifi_change);
+                    t.cancel();
+                    return;
+                }
                 /*AMBIENT LIGHT*/
                 Log.d("Ambient Light: ", light_value);
 
@@ -154,6 +243,9 @@ public class SensorsService extends IntentService implements SensorEventListener
                 }
                 stop();
                 Log.d("Ambient Sound: ", String.valueOf(max_ambient_sound));
+
+                writeToSensorFile();
+                readFromSensorFile();
 
             }
         }, 0, Constants.SERVICE_REQUEST_INTERVAL_IN_MILLISECONDS);

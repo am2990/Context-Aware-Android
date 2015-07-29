@@ -42,7 +42,7 @@ public class MainActivity extends ActionBarActivity {
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
-
+    Intent i = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,17 +65,17 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+
                 if(isChecked){
                     //Button is ON. Service starts
-                    Intent i = new Intent(MainActivity.this, SensorsService.class);
+                     i = new Intent(MainActivity.this, SensorsService.class);
                     Toast.makeText(MainActivity.this, "Service Started!", Toast.LENGTH_SHORT).show();
                     startService(i);
                 }
                 else {
                     //Button is OFF. Service stops
-                    Intent i = new Intent(MainActivity.this, SensorsService.class);
                     Toast.makeText(MainActivity.this, "Service Stopped", Toast.LENGTH_SHORT).show();
-                    stopService(i);
+                    SensorsService.isRunning = false;
                 }
             }
         });
@@ -104,12 +104,12 @@ public class MainActivity extends ActionBarActivity {
         UserInformation entry5 = new UserInformation(5, "User 5", "Sleeping");
         UserInformation entry6 = new UserInformation(6, "User 6", "Active");
 
-//        long entry1_id = db.createFeedEntry(entry1);
-//        long entry2_id = db.createFeedEntry(entry2);
-//        long entry3_id = db.createFeedEntry(entry3);
-//        long entry4_id = db.createFeedEntry(entry4);
-//        long entry5_id = db.createFeedEntry(entry5);
-//        long entry6_id = db.createFeedEntry(entry6);
+        long entry1_id = db.createFeedEntry(entry1);
+        long entry2_id = db.createFeedEntry(entry2);
+        long entry3_id = db.createFeedEntry(entry3);
+        long entry4_id = db.createFeedEntry(entry4);
+        long entry5_id = db.createFeedEntry(entry5);
+        long entry6_id = db.createFeedEntry(entry6);
 
         //getting all entries
         List<UserInformation> allEntries = db.getAllEntries();

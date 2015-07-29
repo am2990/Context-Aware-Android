@@ -9,16 +9,28 @@ import android.media.MediaRecorder;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 
@@ -32,6 +44,19 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
 
     private static final String LOG = "Sensor Activity";
     private MediaRecorder mRecorder = null;
+
+    private String ssid;
+    private String light_value;
+    private String sensorVal;
+
+    private JSONObject user_information;
+    private JSONObject sensor_data;
+    private JSONArray sensors;
+
+    //file i/o
+    private String filename = "SensorData.txt";
+    private String filepath = "SensorDataFolder";
+    File SensorDataFolder;
 
     public void start() {
         if (mRecorder == null) {
@@ -95,7 +120,7 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
 
         WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        String ssid = wifiInfo.getSSID();
+        ssid = wifiInfo.getSSID();
 
         //text view for wifi sensor
         TextView titleView = new TextView(this);
@@ -146,7 +171,7 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
     @Override
     public void onSensorChanged(SensorEvent event) {
         float light_intensity = event.values[0];
-        String light_value = Float.toString(light_intensity);
+        light_value = Float.toString(light_intensity);
 
         //text view for light intensity
         TextView light = new TextView(this);
@@ -154,10 +179,80 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
         light.setText("Light Intensity: " + light_value);
         layout.addView(light);
 
+        writeToFile();
+
+        //path to where the file is stored
+        Log.d("Path: ", String.valueOf(getFilesDir()));
+        readFromFile();
+
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+    public void writeToFile() {
+        //writing text to file
+        try
+        {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String timestamp = dateFormat.format(new Date());
+
+            sensor_data = new JSONObject();
+            sensor_data.put("Ambient Light", light_value);
+            sensor_data.put("Ambient Sound", max_ambient_sound);
+
+            sensors = new JSONArray();
+            sensors.put(sensor_data);
+
+            user_information = new JSONObject();
+            user_information.put("Timestamp", timestamp);
+            user_information.put("Username", "User1");  //fetch from database later
+            user_information.put("Sensors", sensors);
+
+
+            FileOutputStream fileOutputStream = openFileOutput("SensorData.txt", MODE_APPEND);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+
+//            sensorVal = WiFiSSIDChangeBroadcastReceiver.ssid + " ," + light_value + " ," + max_ambient_sound;
+//            outputStreamWriter.write(sensorVal);
+
+            outputStreamWriter.write(user_information.toString());
+            outputStreamWriter.close();
+
+            //display file saved message
+            Toast.makeText(getBaseContext(), "File saved successfully!",
+                    Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void readFromFile(){
+        //reading text from file
+        try {
+            FileInputStream fileIn=openFileInput("SensorData.txt");
+            InputStreamReader InputRead= new InputStreamReader(fileIn);
+
+            char[] inputBuffer= new char[1000];
+            String s="";
+            int charRead;
+
+            while ((charRead=InputRead.read(inputBuffer))>0) {
+                // char to string conversion
+                String readstring=String.copyValueOf(inputBuffer,0,charRead);
+                s +=readstring;
+            }
+            InputRead.close();
+            Log.d("JSON Format: ", s);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
