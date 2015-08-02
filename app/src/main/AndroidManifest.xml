@@ -29,8 +29,12 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <!--
-        DON"T CHANGE android:name variable
+        DON'T CHANGE android:name variable
         for risk of breaking code due to dependence on explicit intents to start or bind the service
         -->
 
@@ -38,6 +42,11 @@
             android:name=".SensorsService"
             android:exported="false" >
         </service>
+
+        <!-- Activity recognition service -->
+        <service
+            android:name=".ActivityRecognitionAPI.DetectedActivitiesIntentService"
+            android:exported="false" />
 
         <!-- main/home activity (it has no parent activity) -->
         <activity

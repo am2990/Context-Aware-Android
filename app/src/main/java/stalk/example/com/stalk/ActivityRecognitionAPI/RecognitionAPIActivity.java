@@ -68,9 +68,10 @@ public class RecognitionAPIActivity extends ActionBarActivity implements
     private ArrayList<DetectedActivity> mDetectedActivities;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recognition_api);
+
         // Get the UI widgets.
         mRequestActivityUpdatesButton = (Button) findViewById(R.id.request_activity_updates_button);
         mRemoveActivityUpdatesButton = (Button) findViewById(R.id.remove_activity_updates_button);

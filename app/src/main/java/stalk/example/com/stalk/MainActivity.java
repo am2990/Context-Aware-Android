@@ -104,12 +104,12 @@ public class MainActivity extends ActionBarActivity {
         UserInformation entry5 = new UserInformation(5, "User 5", "Sleeping");
         UserInformation entry6 = new UserInformation(6, "User 6", "Active");
 
-        long entry1_id = db.createFeedEntry(entry1);
-        long entry2_id = db.createFeedEntry(entry2);
-        long entry3_id = db.createFeedEntry(entry3);
-        long entry4_id = db.createFeedEntry(entry4);
-        long entry5_id = db.createFeedEntry(entry5);
-        long entry6_id = db.createFeedEntry(entry6);
+//        long entry1_id = db.createFeedEntry(entry1);
+//        long entry2_id = db.createFeedEntry(entry2);
+//        long entry3_id = db.createFeedEntry(entry3);
+//        long entry4_id = db.createFeedEntry(entry4);
+//        long entry5_id = db.createFeedEntry(entry5);
+//        long entry6_id = db.createFeedEntry(entry6);
 
         //getting all entries
         List<UserInformation> allEntries = db.getAllEntries();

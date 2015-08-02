@@ -8,6 +8,7 @@ import android.hardware.SensorManager;
 import android.media.MediaRecorder;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
@@ -18,15 +19,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,7 +66,8 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
     //file i/o
     private String filename = "SensorData.txt";
     private String filepath = "SensorDataFolder";
-    File SensorDataFolder;
+
+    private String s="";
 
     public void start() {
         if (mRecorder == null) {
@@ -184,7 +195,8 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
         //path to where the file is stored
         Log.d("Path: ", String.valueOf(getFilesDir()));
         readFromFile();
-
+        AsyncHTTPPostTask postTask = new AsyncHTTPPostTask();
+        postTask.execute();
     }
 
     @Override
@@ -238,12 +250,11 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
             InputStreamReader InputRead= new InputStreamReader(fileIn);
 
             char[] inputBuffer= new char[1000];
-            String s="";
             int charRead;
 
             while ((charRead=InputRead.read(inputBuffer))>0) {
                 // char to string conversion
-                String readstring=String.copyValueOf(inputBuffer,0,charRead);
+                String readstring = String.copyValueOf(inputBuffer,0,charRead);
                 s +=readstring;
             }
             InputRead.close();
@@ -251,6 +262,69 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+//    public void sendToServer() throws IOException {
+//        String url = "http://192.168.48.59:8000";
+//
+//        File file = new File(String.valueOf(getFilesDir()+ "/SensorData.txt"));
+//
+//        HttpClient httpclient = new DefaultHttpClient();
+//
+//        HttpPost httppost = new HttpPost(url);
+//
+////        InputStreamEntity reqEntity = new InputStreamEntity(
+////                new FileInputStream(file), -1);
+//        httppost.setEntity(new StringEntity("Hello World!"));
+////        reqEntity.setContentType("binary/octet-stream");
+////        reqEntity.setChunked(true); // Send in multiple parts if needed
+////        httppost.setEntity(reqEntity);
+//        HttpResponse response = httpclient.execute(httppost);
+//        Log.d("HTTP Response: ", String.valueOf(response));
+//
+//    }
+
+    public class AsyncHTTPPostTask extends AsyncTask<File, Void, String>{
+
+        String url = "http://192.168.1.2:8000/";
+        File file = new File(String.valueOf(getFilesDir()+ "/SensorData.txt"));
+
+        @Override
+        protected String doInBackground(File... params){
+            Log.d(LOG, "Do in background");
+            Log.d("Directory", String.valueOf(getFilesDir()));
+            readFromFile();
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost(url);
+//            InputStreamEntity reqEntity = null;
+//            try {
+//                reqEntity = new InputStreamEntity(
+//                    new FileInputStream(file), -1);
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+
+//            String meh = "Hello world!";
+
+            try {
+                httppost.setEntity(new StringEntity(s));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+//        reqEntity.setContentType("binary/octet-stream");
+//        reqEntity.setChunked(true); // Send in multiple parts if needed
+//        httppost.setEntity(reqEntity);
+            HttpResponse response = null;
+            try {
+                response = httpclient.execute(httppost);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Log.d("HTTP Response: ", String.valueOf(response));
+
+            return null;
         }
     }
 

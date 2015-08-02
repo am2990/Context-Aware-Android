@@ -12,10 +12,17 @@ import android.media.MediaRecorder;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -182,6 +189,23 @@ public class SensorsService extends IntentService implements SensorEventListener
         }
     }
 
+    public void sendToServer() throws IOException {
+        String url = "http://192.168.48.59:8000";
+        File file = new File(String.valueOf(getFilesDir()+ "/SensorData.txt"));
+
+        HttpClient httpclient = new DefaultHttpClient();
+
+        HttpPost httppost = new HttpPost(url);
+        InputStreamEntity reqEntity = new InputStreamEntity(
+                new FileInputStream(file), -1);
+        reqEntity.setContentType("binary/octet-stream");
+        reqEntity.setChunked(true); // Send in multiple parts if needed
+        httppost.setEntity(reqEntity);
+        HttpResponse response = httpclient.execute(httppost);
+        Log.d("HTTP Response: ", String.valueOf(response));
+
+    }
+
 
     @Override
     public void onCreate(){
@@ -200,7 +224,6 @@ public class SensorsService extends IntentService implements SensorEventListener
 
         //registered broadcast receivers for WiFi SSID change activity
         wifi_change = new WiFiSSIDChangeBroadcastReceiver();
-
 
         isRunning = true;
 
@@ -246,7 +269,11 @@ public class SensorsService extends IntentService implements SensorEventListener
 
                 writeToSensorFile();
                 readFromSensorFile();
-
+                try {
+                    sendToServer();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }, 0, Constants.SERVICE_REQUEST_INTERVAL_IN_MILLISECONDS);
 
