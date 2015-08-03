@@ -189,6 +189,8 @@ public class SensorsService extends IntentService implements SensorEventListener
         }
     }
 
+
+    //TODO: Use AsyncTask instead
     public void sendToServer() throws IOException {
         String url = "http://192.168.48.59:8000";
         File file = new File(String.valueOf(getFilesDir()+ "/SensorData.txt"));

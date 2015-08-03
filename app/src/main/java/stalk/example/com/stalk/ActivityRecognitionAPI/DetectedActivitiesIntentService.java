@@ -2,6 +2,7 @@ package stalk.example.com.stalk.ActivityRecognitionAPI;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -9,14 +10,22 @@ import android.widget.Toast;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,6 +37,7 @@ public class DetectedActivitiesIntentService extends IntentService {
 
     protected static final String TAG = "detection service";
     private JSONObject activity_data;
+    private String s="";
 
     /**
      * This constructor is required, and calls the super IntentService(String)
@@ -76,6 +86,8 @@ public class DetectedActivitiesIntentService extends IntentService {
 
             writeToActivityFile();
             readFromActivityFile();
+            AsyncHTTPPostTask postTask = new AsyncHTTPPostTask();
+            postTask.execute();
 
             Log.i(TAG, Constants.getActivityString(
                             getApplicationContext(),
@@ -96,7 +108,7 @@ public class DetectedActivitiesIntentService extends IntentService {
         try
         {
 
-            FileOutputStream fileOutputStream = openFileOutput("ActivityData.txt", MODE_APPEND);
+            FileOutputStream fileOutputStream = openFileOutput("ActivityData.txt",MODE_APPEND);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
 
             outputStreamWriter.write(activity_data.toString());
@@ -118,7 +130,6 @@ public class DetectedActivitiesIntentService extends IntentService {
             InputStreamReader InputRead= new InputStreamReader(fileIn);
 
             char[] inputBuffer= new char[1000];
-            String s="";
             int charRead;
 
             while ((charRead=InputRead.read(inputBuffer))>0) {
@@ -131,6 +142,49 @@ public class DetectedActivitiesIntentService extends IntentService {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public class AsyncHTTPPostTask extends AsyncTask<File, Void, String> {
+
+        String url = "http://192.168.1.2:8000/";
+//        File file = new File(String.valueOf(getFilesDir()+ "/ActivityData.txt"));
+
+        @Override
+        protected String doInBackground(File... params){
+            Log.d(TAG, "Do in background");
+            Log.d("Directory", String.valueOf(getFilesDir()));
+            readFromActivityFile();
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost(url);
+//            InputStreamEntity reqEntity = null;
+//            try {
+//                reqEntity = new InputStreamEntity(
+//                    new FileInputStream(file), -1);
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+
+//            String meh = "Hello world!";
+
+            try {
+                httppost.setEntity(new StringEntity(s));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+//        reqEntity.setContentType("binary/octet-stream");
+//        reqEntity.setChunked(true); // Send in multiple parts if needed
+//        httppost.setEntity(reqEntity);
+            HttpResponse response = null;
+            try {
+                response = httpclient.execute(httppost);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Log.d("HTTP Response: ", String.valueOf(response));
+
+            return null;
         }
     }
 }
