@@ -30,6 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //column names - user information
     private static final String KEY_ID = "id";
+    private static final String KEY_UID = "uid";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_ACTIVITY = "activity";
 
@@ -41,8 +42,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //creating tables
     private static final String CREATE_TABLE_USER_INFORMATION = "CREATE TABLE "
-            + TABLE_USER_INFORMATION + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME
-            + " TEXT," + KEY_ACTIVITY + " TEXT" + ")";
+            + TABLE_USER_INFORMATION + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_UID
+            + " TEXT," + KEY_USERNAME + " TEXT," + KEY_ACTIVITY + " TEXT" + ")";
 
     private static final String CREATE_TABLE_SENSOR_INFORMATION = "CREATE TABLE "
             + TABLE_SENSOR_INFORMATION + "(" + SENSOR_ID + "INTEGER PRIMARY KEY," + KEY_SENSORNAME
@@ -75,6 +76,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_ID, feedEntry.getId());
+        values.put(KEY_UID, feedEntry.getUid());
         values.put(KEY_USERNAME, feedEntry.getUsername());
         values.put(KEY_ACTIVITY, feedEntry.getActivity());
 
@@ -120,6 +122,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 UserInformation td = new UserInformation();
                 td.setId(c.getInt((c.getColumnIndex(KEY_ID))));
+                td.setUid(c.getString(c.getColumnIndex(KEY_UID)));
                 td.setUsername((c.getString(c.getColumnIndex(KEY_USERNAME))));
                 td.setActivity(c.getString(c.getColumnIndex(KEY_ACTIVITY)));
 

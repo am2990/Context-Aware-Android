@@ -12,6 +12,7 @@
     <string name="action_search">Search</string>
     <string name="button_activity">Activity</string>
     <string name="sensor_button">Sensors</string>
+    <string name="fetch_button">Fetch</string>
     <string name="hello_world">Hello world!</string>
 
     <!--&lt;!&ndash; Service Start Stop Button &ndash;&gt;-->
@@ -79,6 +80,7 @@
     <string name="activity_updates_removed">Activity updates removed</string>
 
     <string name="not_connected">GoogleApiClient not yet connected. Try again.</string>
+    <string name="title_activity_fetch">FetchActivity</string>
 
 
 </resources>

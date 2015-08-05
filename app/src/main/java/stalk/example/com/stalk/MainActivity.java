@@ -6,12 +6,14 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,10 +25,12 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import android.provider.Settings.Secure;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import stalk.example.com.stalk.ActivityRecognitionAPI.RecognitionAPIActivity;
 import stalk.example.com.stalk.Database.DatabaseHelper;
@@ -43,6 +47,8 @@ public class MainActivity extends ActionBarActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
     Intent i = null;
+    private String device_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,10 +59,7 @@ public class MainActivity extends ActionBarActivity {
         //Buttons
         Button activity = (Button) findViewById(R.id.button_activity);
         Button sensor = (Button) findViewById(R.id.sensor_button);
-
-//        //service start and stop button
-//        Button start = (Button) findViewById(R.id.service_start_button);
-//        Button stop = (Button) findViewById(R.id.service_stop_button);
+        Button fetch = (Button) findViewById(R.id.fetch_button);
 
         //service start and stop toggle button
         ToggleButton toggle_button = (ToggleButton) findViewById(R.id.service_toggle_button);
@@ -96,13 +99,32 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        //Fetch Activity
+        fetch.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, FetchActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+
+        final String tmDevice, tmSerial, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        device_id = deviceUuid.toString();
+        Log.d("Android ID", device_id);
+
         //create entries
-        UserInformation entry1 = new UserInformation(1, "User 1", "Sleeping");
-        UserInformation entry2 = new UserInformation(2, "User 2", "Active");
-        UserInformation entry3 = new UserInformation(3, "User 3", "Active");
-        UserInformation entry4 = new UserInformation(4, "User 4", "Sleeping");
-        UserInformation entry5 = new UserInformation(5, "User 5", "Sleeping");
-        UserInformation entry6 = new UserInformation(6, "User 6", "Active");
+        UserInformation entry1 = new UserInformation(1, "User 1", "Sleeping", device_id);
+//        UserInformation entry2 = new UserInformation(2, "User 2", "Active");
+//        UserInformation entry3 = new UserInformation(3, "User 3", "Active");
+//        UserInformation entry4 = new UserInformation(4, "User 4", "Sleeping");
+//        UserInformation entry5 = new UserInformation(5, "User 5", "Sleeping");
+//        UserInformation entry6 = new UserInformation(6, "User 6", "Active");
 
 //        long entry1_id = db.createFeedEntry(entry1);
 //        long entry2_id = db.createFeedEntry(entry2);
@@ -116,7 +138,7 @@ public class MainActivity extends ActionBarActivity {
         ItemData[] itemsData = new ItemData[allEntries.size()];
 
         for (int i = 0; i < allEntries.size(); i++) {
-            itemsData[i] = new ItemData(allEntries.get(i).getUsername(), R.drawable.help, allEntries.get(i).getActivity());
+            itemsData[i] = new ItemData(allEntries.get(i).getUsername(), R.drawable.help, allEntries.get(i).getActivity(), allEntries.get(i).getUid());
         }
 
         mDrawerList = (ListView) findViewById(R.id.navList);

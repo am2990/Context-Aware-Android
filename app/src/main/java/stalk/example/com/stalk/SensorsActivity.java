@@ -265,29 +265,10 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
         }
     }
 
-//    public void sendToServer() throws IOException {
-//        String url = "http://192.168.48.59:8000";
-//
-//        File file = new File(String.valueOf(getFilesDir()+ "/SensorData.txt"));
-//
-//        HttpClient httpclient = new DefaultHttpClient();
-//
-//        HttpPost httppost = new HttpPost(url);
-//
-////        InputStreamEntity reqEntity = new InputStreamEntity(
-////                new FileInputStream(file), -1);
-//        httppost.setEntity(new StringEntity("Hello World!"));
-////        reqEntity.setContentType("binary/octet-stream");
-////        reqEntity.setChunked(true); // Send in multiple parts if needed
-////        httppost.setEntity(reqEntity);
-//        HttpResponse response = httpclient.execute(httppost);
-//        Log.d("HTTP Response: ", String.valueOf(response));
-//
-//    }
 
     public class AsyncHTTPPostTask extends AsyncTask<File, Void, String>{
 
-        String url = "http://192.168.1.2:8000/";
+        String url = "http://192.168.48.59:8000/";
         File file = new File(String.valueOf(getFilesDir()+ "/SensorData.txt"));
 
         @Override
@@ -305,7 +286,6 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
 //                e.printStackTrace();
 //            }
 
-//            String meh = "Hello world!";
 
             try {
                 httppost.setEntity(new StringEntity(s));
