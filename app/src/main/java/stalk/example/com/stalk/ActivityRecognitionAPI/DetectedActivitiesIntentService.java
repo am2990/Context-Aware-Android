@@ -36,6 +36,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import stalk.example.com.stalk.MainActivity;
+
 /**
  * Created by apurv on 6/22/2015.
  */
@@ -78,14 +80,14 @@ public class DetectedActivitiesIntentService extends IntentService {
         String timestamp = dateFormat.format(new Date());
         activity_data = new JSONObject();
 
-        // Log each activity.
+        // Log each activity
         Log.i(TAG, "activities detected");
         String toSend="";
         for (DetectedActivity da: detectedActivities) {
 
             try{
             activity_data.put("Timestamp", timestamp);
-            activity_data.put("User_ID", "User1");
+            activity_data.put("User_ID", MainActivity.device_id);
             activity_data.put("Detected_Activity", Constants.getActivityString(getApplicationContext(), da.getType()));
             activity_data.put("Confidence", da.getConfidence());
 
@@ -109,6 +111,7 @@ public class DetectedActivitiesIntentService extends IntentService {
 //        readFromActivityFile();
 
         writeToActivityFile(toSend);
+        Log.d("JSON String", activity_data.toString());
         AsyncHTTPPostTask postTask = new AsyncHTTPPostTask();
         postTask.execute();
 

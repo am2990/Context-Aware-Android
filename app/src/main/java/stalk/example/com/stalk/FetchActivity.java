@@ -26,6 +26,8 @@ public class FetchActivity extends ActionBarActivity {
     private String activity;
     TextView final_data;
 
+    private String id_ = (MainActivity.device_id).toString();
+    private String phone1_id = "ffffffff-cd60-400f-ffff-ffffabf4fbca";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +51,21 @@ public class FetchActivity extends ActionBarActivity {
 
     public class AsyncHTTPGetTask extends AsyncTask<File, Void, String> {
 
-        String url = "http://192.168.48.59:8000/max";
-
-
-
+        @Override
         protected void onPostExecute(String activity) {
+            super.onPostExecute(activity);
             final_data.setText(activity);
         }
 
         @Override
         protected String doInBackground(File... params){
             BufferedReader in = null;
-
+            String url;
+            if(id_.equals(phone1_id)){
+                url = "http://192.168.48.59:8000/new_max";
+            }else{
+                url = "http://192.168.48.59:8000/max";
+            }
             try {
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();

@@ -39,6 +39,7 @@ import stalk.example.com.stalk.Database.UserInformation;
 
 public class MainActivity extends ActionBarActivity {
 
+    public static String device_id;
     Button activityRecognition;
     DatabaseHelper db;
     private ListView mDrawerList;
@@ -47,7 +48,6 @@ public class MainActivity extends ActionBarActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
     Intent i = null;
-    private String device_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,17 +116,18 @@ public class MainActivity extends ActionBarActivity {
 
         UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
         device_id = deviceUuid.toString();
-        Log.d("Android ID", device_id);
 
         //create entries
-        UserInformation entry1 = new UserInformation(1, "User 1", "Sleeping", device_id);
+        //TODO: Change to Phone 2 in second phone
+        //Fetch activity and show here
+        UserInformation entry1 = new UserInformation(1, "Phone 1", "Sleeping", device_id);
 //        UserInformation entry2 = new UserInformation(2, "User 2", "Active");
 //        UserInformation entry3 = new UserInformation(3, "User 3", "Active");
 //        UserInformation entry4 = new UserInformation(4, "User 4", "Sleeping");
 //        UserInformation entry5 = new UserInformation(5, "User 5", "Sleeping");
 //        UserInformation entry6 = new UserInformation(6, "User 6", "Active");
 
-//        long entry1_id = db.createFeedEntry(entry1);
+        long entry1_id = db.createFeedEntry(entry1);
 //        long entry2_id = db.createFeedEntry(entry2);
 //        long entry3_id = db.createFeedEntry(entry3);
 //        long entry4_id = db.createFeedEntry(entry4);
