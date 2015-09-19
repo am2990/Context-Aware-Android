@@ -22,7 +22,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,27 +40,21 @@ import stalk.example.com.stalk.ActivityRecognitionAPI.Constants;
 public class SensorsService extends IntentService implements SensorEventListener {
 
     private static final String TAG = "Sensor Polling Service";
-
+    public static boolean isRunning = false;
+    //timer for service
+    private final Timer t = new Timer();
     private SensorManager mSensorManager;
     private Sensor mLight;
-
     private float light_intensity;
     private String light_value;
-    public static boolean isRunning = false;
-
     private MediaRecorder mRecorder = null;
     private int ambient_sound;
     private List<Integer> buffer = new ArrayList<Integer>();
     private int max_ambient_sound;
-
     private String sensorVal;
     private JSONObject user_information;
     private JSONObject sensor_data;
     private JSONArray sensors;
-
-    //timer for service
-    private final Timer t = new Timer();
-
     //broadcast receivers
     private UserPresentBroadcastReceiver user_present;
     private WiFiSSIDChangeBroadcastReceiver wifi_change;
@@ -102,8 +95,7 @@ public class SensorsService extends IntentService implements SensorEventListener
         if (mRecorder != null) {
             ambient_sound = mRecorder.getMaxAmplitude();
             buffer.add(ambient_sound);
-        }
-        else {
+        } else {
             ambient_sound = 0;
             buffer.add(ambient_sound);
         }
@@ -129,8 +121,7 @@ public class SensorsService extends IntentService implements SensorEventListener
 
     public void writeToSensorFile() {
         //writing text to file
-        try
-        {
+        try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String timestamp = dateFormat.format(new Date());
 
@@ -166,20 +157,20 @@ public class SensorsService extends IntentService implements SensorEventListener
     }
 
 
-    public void readFromSensorFile(){
+    public void readFromSensorFile() {
         //reading text from file
         try {
-            FileInputStream fileIn=openFileInput("SensorData.txt");
-            InputStreamReader InputRead= new InputStreamReader(fileIn);
+            FileInputStream fileIn = openFileInput("SensorData.txt");
+            InputStreamReader InputRead = new InputStreamReader(fileIn);
 
-            char[] inputBuffer= new char[1000];
-            String s="";
+            char[] inputBuffer = new char[1000];
+            String s = "";
             int charRead;
 
-            while ((charRead=InputRead.read(inputBuffer))>0) {
+            while ((charRead = InputRead.read(inputBuffer)) > 0) {
                 // char to string conversion
-                String readstring=String.copyValueOf(inputBuffer,0,charRead);
-                s +=readstring;
+                String readstring = String.copyValueOf(inputBuffer, 0, charRead);
+                s += readstring;
             }
             InputRead.close();
             Log.d("JSON Format: ", s);
@@ -190,10 +181,10 @@ public class SensorsService extends IntentService implements SensorEventListener
     }
 
 
-    //TODO: Use AsyncTask instead
+    //TODO: Use AsyncTask instead - refer SensorsActivtiy
     public void sendToServer() throws IOException {
         String url = "http://192.168.48.59:8000";
-        File file = new File(String.valueOf(getFilesDir()+ "/SensorData.txt"));
+        File file = new File(String.valueOf(getFilesDir() + "/SensorData.txt"));
 
         HttpClient httpclient = new DefaultHttpClient();
 
@@ -210,7 +201,7 @@ public class SensorsService extends IntentService implements SensorEventListener
 
 
     @Override
-    public void onCreate(){
+    public void onCreate() {
         super.onCreate();
 
         Log.d(TAG, "Service onCreate called");
@@ -252,7 +243,7 @@ public class SensorsService extends IntentService implements SensorEventListener
                 registerReceiver(user_present, new IntentFilter("android.intent.action.USER_PRESENT"));
                 registerReceiver(wifi_change, new IntentFilter("android.net.wifi.STATE_CHANGE"));
 
-                if(!isRunning){
+                if (!isRunning) {
                     unregisterReceiver(user_present);
                     unregisterReceiver(wifi_change);
                     t.cancel();
@@ -263,8 +254,8 @@ public class SensorsService extends IntentService implements SensorEventListener
 
                 /*AMBIENT SOUND*/
                 for (int j = 0; j < 1000; j++) {
-                start();
-                getAmplitude();
+                    start();
+                    getAmplitude();
                 }
                 stop();
                 Log.d("Ambient Sound: ", String.valueOf(max_ambient_sound));

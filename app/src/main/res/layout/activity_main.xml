@@ -50,22 +50,22 @@
             android:text="Fetch" />
 
         <!--<Button-->
-            <!--android:id="@+id/service_start_button"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="180dp"-->
-            <!--android:layout_marginTop="400dp"-->
-            <!--android:padding="15dp"-->
-            <!--android:text="@string/service_start_button" />-->
+        <!--android:id="@+id/service_start_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="180dp"-->
+        <!--android:layout_marginTop="400dp"-->
+        <!--android:padding="15dp"-->
+        <!--android:text="@string/service_start_button" />-->
 
         <!--<Button-->
-            <!--android:id="@+id/service_stop_button"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="180dp"-->
-            <!--android:layout_marginTop="450dp"-->
-            <!--android:padding="15dp"-->
-            <!--android:text="@string/service_stop_button" />-->
+        <!--android:id="@+id/service_stop_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="180dp"-->
+        <!--android:layout_marginTop="450dp"-->
+        <!--android:padding="15dp"-->
+        <!--android:text="@string/service_stop_button" />-->
 
         <ToggleButton
             android:id="@+id/service_toggle_button"

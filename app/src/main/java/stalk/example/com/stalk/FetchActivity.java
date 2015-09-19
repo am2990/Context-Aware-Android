@@ -1,8 +1,8 @@
 package stalk.example.com.stalk;
 
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +23,7 @@ import java.net.URISyntaxException;
 
 public class FetchActivity extends ActionBarActivity {
 
-    private String activity;
+    public static String activity;
     TextView final_data;
 
     private String id_ = (MainActivity.device_id).toString();
@@ -38,34 +38,57 @@ public class FetchActivity extends ActionBarActivity {
         AsyncHTTPGetTask postTask = new AsyncHTTPGetTask();
         postTask.execute();
 
-        LinearLayout layout= new LinearLayout(this);
+        LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
         final_data = new TextView(this);
-        final_data.setTextSize(15);
+        final_data.setTextSize(25);
         layout.addView(final_data);
 
         setContentView(layout);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_fetch, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     public class AsyncHTTPGetTask extends AsyncTask<File, Void, String> {
 
         @Override
         protected void onPostExecute(String activity) {
             super.onPostExecute(activity);
-            final_data.setText(activity);
+            final_data.setText(MainActivity.user + ": " + activity);
         }
 
         @Override
-        protected String doInBackground(File... params){
+        protected String doInBackground(File... params) {
             BufferedReader in = null;
             String url;
-            if(id_.equals(phone1_id)){
+
+            if (id_.equals(phone1_id)) {
                 url = "http://192.168.48.59:8000/new_max";
-            }else{
+            } else {
                 url = "http://192.168.48.59:8000/max";
             }
+
             try {
                 HttpClient client = new DefaultHttpClient();
                 HttpGet request = new HttpGet();
@@ -89,26 +112,5 @@ public class FetchActivity extends ActionBarActivity {
             return activity;
         }
 
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_fetch, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

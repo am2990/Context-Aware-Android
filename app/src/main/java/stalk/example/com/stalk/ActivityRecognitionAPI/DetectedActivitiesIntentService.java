@@ -5,21 +5,15 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
-import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,8 +24,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,7 +37,7 @@ public class DetectedActivitiesIntentService extends IntentService {
 
     protected static final String TAG = "detection service";
     private JSONObject activity_data;
-    private String s="";
+    private String s = "";
 
     /**
      * This constructor is required, and calls the super IntentService(String)
@@ -63,6 +55,7 @@ public class DetectedActivitiesIntentService extends IntentService {
 
     /**
      * Handles incoming intents.
+     *
      * @param intent The Intent is provided (inside a PendingIntent) when requestActivityUpdates()
      *               is called.
      */
@@ -82,23 +75,22 @@ public class DetectedActivitiesIntentService extends IntentService {
 
         // Log each activity
         Log.i(TAG, "activities detected");
-        String toSend="";
-        for (DetectedActivity da: detectedActivities) {
+        String toSend = "";
+        for (DetectedActivity da : detectedActivities) {
 
-            try{
-            activity_data.put("Timestamp", timestamp);
-            activity_data.put("User_ID", MainActivity.device_id);
-            activity_data.put("Detected_Activity", Constants.getActivityString(getApplicationContext(), da.getType()));
-            activity_data.put("Confidence", da.getConfidence());
+            try {
+                activity_data.put("Timestamp", timestamp);
+                activity_data.put("User_ID", MainActivity.device_id);
+                activity_data.put("Detected_Activity", Constants.getActivityString(getApplicationContext(), da.getType()));
+                activity_data.put("Confidence", da.getConfidence());
 
-            toSend += activity_data;
-            toSend += "|";
+                toSend += activity_data;
+                toSend += "|";
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
             //TODO: Use string builder instead
-
 
 
             Log.i(TAG, Constants.getActivityString(
@@ -116,16 +108,13 @@ public class DetectedActivitiesIntentService extends IntentService {
         postTask.execute();
 
 
-
-
         // Broadcast the list of detected activities.
         localIntent.putExtra(Constants.ACTIVITY_EXTRA, detectedActivities);
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
     }
 
     public void writeToActivityFile(String toSend) {
-        try
-        {
+        try {
 
             FileOutputStream fileOutputStream = openFileOutput("ActivityData.txt", 0);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
@@ -142,19 +131,19 @@ public class DetectedActivitiesIntentService extends IntentService {
         }
     }
 
-    public void readFromActivityFile(){
+    public void readFromActivityFile() {
         //reading text from file
         try {
-            FileInputStream fileIn=openFileInput("ActivityData.txt");
-            InputStreamReader InputRead= new InputStreamReader(fileIn);
+            FileInputStream fileIn = openFileInput("ActivityData.txt");
+            InputStreamReader InputRead = new InputStreamReader(fileIn);
 
-            char[] inputBuffer= new char[1000];
+            char[] inputBuffer = new char[1000];
             int charRead;
 
-            while ((charRead=InputRead.read(inputBuffer))>0) {
+            while ((charRead = InputRead.read(inputBuffer)) > 0) {
                 // char to string conversion
-                String readstring=String.copyValueOf(inputBuffer,0,charRead);
-                s +=readstring;
+                String readstring = String.copyValueOf(inputBuffer, 0, charRead);
+                s += readstring;
             }
             InputRead.close();
             Log.d("JSON Format: ", s);
@@ -170,7 +159,7 @@ public class DetectedActivitiesIntentService extends IntentService {
 //        File file = new File(String.valueOf(getFilesDir()+ "/ActivityData.txt"));
 
         @Override
-        protected String doInBackground(File... params){
+        protected String doInBackground(File... params) {
             Log.d(TAG, "Do in background");
             Log.d("Directory", String.valueOf(getFilesDir()));
             readFromActivityFile();

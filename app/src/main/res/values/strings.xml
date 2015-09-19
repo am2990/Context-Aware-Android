@@ -23,7 +23,7 @@
     <string name="service_toggle_button">Service On/Off</string>
 
 
-    //activity recognition API strings
+    <!-- activity recognition API strings -->
     <string name="title_activity_recognition_api">Recognition API</string>
 
     <string name="activity_title">Manage Activity Updates</string>
@@ -81,6 +81,10 @@
 
     <string name="not_connected">GoogleApiClient not yet connected. Try again.</string>
     <string name="title_activity_fetch">FetchActivity</string>
+
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">stalk.example.com</string>
+    <string name="content_authority">stalk.example.com.stalk.app</string>
 
 
 </resources>

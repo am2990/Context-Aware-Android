@@ -3,12 +3,13 @@ package stalk.example.com.stalk.Database;
 /**
  * Created by Srishti Sengupta on 7/8/2015.
  */
-public class SensorInformation{
+public class SensorInformation {
     //sensor information model
     private long id;
     private String sensorName;
     private String sensorValue;
     private String location;
+//    private UserInformation user;
 
     public SensorInformation(long id, String sensorName, String sensorValue, String location) {
         this.id = id;

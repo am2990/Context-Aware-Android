@@ -2,11 +2,9 @@ package stalk.example.com.stalk;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.provider.Settings;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,7 +23,6 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import android.provider.Settings.Secure;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,19 +32,21 @@ import java.util.UUID;
 import stalk.example.com.stalk.ActivityRecognitionAPI.RecognitionAPIActivity;
 import stalk.example.com.stalk.Database.DatabaseHelper;
 import stalk.example.com.stalk.Database.UserInformation;
+//import stalk.example.com.stalk.sync.AppSyncAdapter;
 
 
 public class MainActivity extends ActionBarActivity {
 
     public static String device_id;
+    public static String user;
     Button activityRecognition;
     DatabaseHelper db;
+    Intent i = null;
     private ListView mDrawerList;
     private DrawerLayout mDrawerLayout;
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
-    Intent i = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +68,12 @@ public class MainActivity extends ActionBarActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
 
-                if(isChecked){
+                if (isChecked) {
                     //Button is ON. Service starts
-                     i = new Intent(MainActivity.this, SensorsService.class);
+                    i = new Intent(MainActivity.this, SensorsService.class);
                     Toast.makeText(MainActivity.this, "Service Started!", Toast.LENGTH_SHORT).show();
                     startService(i);
-                }
-                else {
+                } else {
                     //Button is OFF. Service stops
                     Toast.makeText(MainActivity.this, "Service Stopped", Toast.LENGTH_SHORT).show();
                     SensorsService.isRunning = false;
@@ -114,13 +112,21 @@ public class MainActivity extends ActionBarActivity {
         tmSerial = "" + tm.getSimSerialNumber();
         androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
 
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
         device_id = deviceUuid.toString();
 
         //create entries
-        //TODO: Change to Phone 2 in second phone
         //Fetch activity and show here
-        UserInformation entry1 = new UserInformation(1, "Phone 1", "Sleeping", device_id);
+        if (device_id.equals("ffffffff-cd60-400f-ffff-ffffabf4fbca")) {
+            user = "Phone 2";   //Srishti's phone
+        } else {
+            user = "Phone 1";
+        }
+
+        String timestamp = "put_timestamp_here";
+
+        //TODO: "user activity" to be fetched from ActivityRecognitionAPI
+        UserInformation entry1 = new UserInformation(1, user, "user activity", device_id);
 //        UserInformation entry2 = new UserInformation(2, "User 2", "Active");
 //        UserInformation entry3 = new UserInformation(3, "User 3", "Active");
 //        UserInformation entry4 = new UserInformation(4, "User 4", "Sleeping");
@@ -160,6 +166,10 @@ public class MainActivity extends ActionBarActivity {
         MyAdapter myAdapter = new MyAdapter(itemsData);
         recyclerView.setAdapter(myAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        //Initialise Sync Adapter here
+//        AppSyncAdapter.initializeSyncAdapter(this);
+
     }
 
     private void addDrawerItems() {

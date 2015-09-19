@@ -14,9 +14,9 @@ public class WiFiSSIDChangeBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        final String action  = intent.getAction();
-        if(action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)){
-            WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
+        final String action = intent.getAction();
+        if (action.equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
+            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
             ssid = wifiInfo.getSSID();
             Log.d("Wifi SSID: ", ssid);

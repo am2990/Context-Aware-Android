@@ -10,7 +10,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -21,9 +20,7 @@ import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
@@ -31,7 +28,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -45,14 +41,12 @@ import java.util.List;
 
 
 public class SensorsActivity extends ActionBarActivity implements SensorEventListener {
+    private static final String LOG = "Sensor Activity";
     private LinearLayout layout;
-
     //ambient sound
     private int ambient_sound;
     private List<Integer> buffer = new ArrayList<Integer>();
     private int max_ambient_sound;
-
-    private static final String LOG = "Sensor Activity";
     private MediaRecorder mRecorder = null;
 
     private String ssid;
@@ -67,7 +61,7 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
     private String filename = "SensorData.txt";
     private String filepath = "SensorDataFolder";
 
-    private String s="";
+    private String s = "";
 
     public void start() {
         if (mRecorder == null) {
@@ -100,8 +94,7 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
         if (mRecorder != null) {
             ambient_sound = mRecorder.getMaxAmplitude();
             buffer.add(ambient_sound);
-        }
-        else {
+        } else {
             ambient_sound = 0;
             buffer.add(ambient_sound);
         }
@@ -206,8 +199,7 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
 
     public void writeToFile() {
         //writing text to file
-        try
-        {
+        try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String timestamp = dateFormat.format(new Date());
 
@@ -243,19 +235,19 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
     }
 
 
-    public void readFromFile(){
+    public void readFromFile() {
         //reading text from file
         try {
-            FileInputStream fileIn=openFileInput("SensorData.txt");
-            InputStreamReader InputRead= new InputStreamReader(fileIn);
+            FileInputStream fileIn = openFileInput("SensorData.txt");
+            InputStreamReader InputRead = new InputStreamReader(fileIn);
 
-            char[] inputBuffer= new char[1000];
+            char[] inputBuffer = new char[1000];
             int charRead;
 
-            while ((charRead=InputRead.read(inputBuffer))>0) {
+            while ((charRead = InputRead.read(inputBuffer)) > 0) {
                 // char to string conversion
-                String readstring = String.copyValueOf(inputBuffer,0,charRead);
-                s +=readstring;
+                String readstring = String.copyValueOf(inputBuffer, 0, charRead);
+                s += readstring;
             }
             InputRead.close();
             Log.d("JSON Format: ", s);
@@ -266,26 +258,18 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
     }
 
 
-    public class AsyncHTTPPostTask extends AsyncTask<File, Void, String>{
+    public class AsyncHTTPPostTask extends AsyncTask<File, Void, String> {
 
         String url = "http://192.168.48.59:8000/";
-        File file = new File(String.valueOf(getFilesDir()+ "/SensorData.txt"));
+        File file = new File(String.valueOf(getFilesDir() + "/SensorData.txt"));
 
         @Override
-        protected String doInBackground(File... params){
+        protected String doInBackground(File... params) {
             Log.d(LOG, "Do in background");
             Log.d("Directory", String.valueOf(getFilesDir()));
             readFromFile();
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost(url);
-//            InputStreamEntity reqEntity = null;
-//            try {
-//                reqEntity = new InputStreamEntity(
-//                    new FileInputStream(file), -1);
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
-
 
             try {
                 httppost.setEntity(new StringEntity(s));
@@ -293,9 +277,6 @@ public class SensorsActivity extends ActionBarActivity implements SensorEventLis
                 e.printStackTrace();
             }
 
-//        reqEntity.setContentType("binary/octet-stream");
-//        reqEntity.setChunked(true); // Send in multiple parts if needed
-//        httppost.setEntity(reqEntity);
             HttpResponse response = null;
             try {
                 response = httpclient.execute(httppost);
