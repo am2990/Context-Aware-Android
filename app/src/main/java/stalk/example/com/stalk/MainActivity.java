@@ -24,6 +24,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -52,6 +55,15 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Parse Test
+        ParseUser.enableAutomaticUser();
+        ParseObject testObject = new ParseObject("TestObject");
+        testObject.put("foo", "bar");
+        testObject.saveInBackground();
+
+        Toast.makeText(this, testObject.getString("foo"), Toast.LENGTH_SHORT)
+                .show();
 
         db = new DatabaseHelper(getApplicationContext());
 
